@@ -60,8 +60,10 @@
             border-top: none;
             border-radius: 15px 15px;
             overflow: hidden;
-            background: rgba(24, 169, 193, .15);
+            /*background: rgba(24, 169, 193, .15);*/
             backdrop-filter: saturate(180%) blur(20px);
+            background-image: url("../assets/img/box-bg.png");
+            background-size: 100% 100%;
         }
         .hiddenFloat{
             padding-top: 60px;

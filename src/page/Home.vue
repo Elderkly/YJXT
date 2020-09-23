@@ -170,7 +170,7 @@
                 const chart = new Chart({
                     container: 'c1',
                     autoFit: true,
-                    height: 300,
+                    height: 200,
                 });
                 chart.data(this.list1);
                 chart.scale('percent', {
@@ -460,5 +460,8 @@
                 }
             }
         }
+    }
+    #c2{
+        margin-top: 5%;
     }
 </style>

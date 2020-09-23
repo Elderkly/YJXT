@@ -83,4 +83,18 @@
         position: relative;
         padding: 0!important;
     }
+    @media screen and (max-width: 1650px){
+        .textBox{
+            span{
+                font-size: 13px;
+            }
+        }
+    }
+    @media screen and (max-width: 1450px){
+        .textBox{
+            span{
+                font-size: 10px;
+            }
+        }
+    }
 </style>
