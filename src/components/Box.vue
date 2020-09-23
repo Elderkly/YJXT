@@ -36,8 +36,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(255,255,255,.13);
-            backdrop-filter: saturate(180%) blur(20px);
+            background: rgba(24, 169, 193, .15);
+            backdrop-filter: blur(20px) brightness(0.5);
             border-radius: 15px 15px 0 0;
             border: 2px solid rgba(24, 169, 193, .3);
             box-sizing: border-box;
@@ -93,7 +93,7 @@
             border-top: none;
             border-radius: 15px 15px;
             overflow: hidden;
-            backdrop-filter: saturate(180%) blur(20px);
+            backdrop-filter: saturate(60%) blur(20px) brightness(0.5);
             background: rgba(24, 169, 193, .15);
             /*background-image: url("../assets/img/box-bg.png");*/
             background-size: 100% 100%;

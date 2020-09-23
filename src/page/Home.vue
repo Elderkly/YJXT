@@ -16,7 +16,7 @@
             </el-amap>
             <div class="map-fixedBox">
                 <div class="map-fixedBox-header">路口列表</div>
-                <ScrollView class="map-fixedBox-content" height='221'>
+                <ScrollView class="map-fixedBox-content" height='221' :itemNum="7">
                     <div></div>
                     <div class="ellipsis">路口1123123112312323</div>
                     <div>路口2</div>
@@ -64,8 +64,40 @@
             </div>
         </Box>
         <Box title="车辆检测实时监控" class="details" :hiddenFloat=true rightButton="收起" @hidden="Details = null" v-if="Details">
-            <div class="chartBox">
+            <div class="detailsBox">
+                <div class="details-left">
+                    <p>当前路口编号</p>
+                    <Dropdown :data="Details.list" v-model="Details.action" class="Dropdown"/>
+                </div>
+                <div class="details-right">
+                    <div class="middle-box">
+                        <div class="middle-box-header">实时预警检测状态更新</div>
+                        <ScrollView class="middle-box-content" height='340' type="text">
+                            <div></div>
+                            <p>CNN15日题为《随着消费者加入到经济复苏的行列中，中国经济摆脱了全球衰退的影响》的报道称，
+                                新冠疫情大流行将全球经济推向低谷，但中国经济正在逆流而上。中国经济已经连续多个月处于复苏模式，现在，消费者也愿意出来花钱了。</p>
+                        </ScrollView>
+                    </div>
+                    <div class="middle-box">
+                        <div class="middle-box-header">运行日志信息显示</div>
+                        <ScrollView class="middle-box-content" height='340' type="text">
+                            <div></div>
+                            <p>CNN15日题为《随着消费者加入到经济复苏的行列中，中国经济摆脱了全球衰退的影响》的报道称，新冠疫情大流行将全球经济推向低谷，但中国经济正在逆流而上。中国经济已经连续多个月处于复苏模式，现在，消费者也愿意出来花钱了。
 
+                                　　日本经济新闻16日报道，主要美企的高管15日先后亮相在重庆开幕的中国网上智博会，这凸显了中美科技对抗之际中国市场的战略重要性。美国科技巨头高通、英特尔、惠普在智博会开幕式上演讲，华为、腾讯和百度的高管也出席了会议。
+
+                                　　英国《金融时报》16日报道，在中国的新冠肺炎新增病例降至很低水平，且政府基础设施项目帮助支撑经济活动之后，中国经济复苏的势头增强。
+
+                                　　新加坡《联合早报》15日报道，亚洲开发银行15日发布报告说，中国是亚太地区少数成功摆脱经济低迷的经济体之一。CNN15日题为《随着消费者加入到经济复苏的行列中，中国经济摆脱了全球衰退的影响》的报道称，新冠疫情大流行将全球经济推向低谷，但中国经济正在逆流而上。中国经济已经连续多个月处于复苏模式，现在，消费者也愿意出来花钱了。
+
+                                　　日本经济新闻16日报道，主要美企的高管15日先后亮相在重庆开幕的中国网上智博会，这凸显了中美科技对抗之际中国市场的战略重要性。美国科技巨头高通、英特尔、惠普在智博会开幕式上演讲，华为、腾讯和百度的高管也出席了会议。
+
+                                　　英国《金融时报》16日报道，在中国的新冠肺炎新增病例降至很低水平，且政府基础设施项目帮助支撑经济活动之后，中国经济复苏的势头增强。
+
+                                　　新加坡《联合早报》15日报道，亚洲开发银行15日发布报告说，中国是亚太地区少数成功摆脱经济低迷的经济体之一。</p>
+                        </ScrollView>
+                    </div>
+                </div>
             </div>
         </Box>
     </div>
@@ -121,7 +153,11 @@
                     { month: 'Dec', city: 'Tokyo', temperature: 9.6 },
                     { month: 'Dec', city: 'London', temperature: 4.8 },
                 ],
-                Details: null
+                // Details: null
+                Details: {
+                    action: 'yuannan-01',
+                    list: ['yuannan-01','yunan-02','yunan-03']
+                }
             }
         },
         mounted() {
@@ -358,12 +394,13 @@
     .home{
         display: flex;
         align-items: center;
+        position: relative;
         .map{
-            width: 58.75%;
-            margin-right: 32px;
+            width: 58%;
         }
         .chart{
-            width: 41.25%;
+            width: 40%;
+            margin-left: 2%;
         }
     }
 
@@ -479,7 +516,74 @@
         margin-top: 5%;
     }
     .details{
-        width: calc(58.75% - 32px);
+        width: 58%;
         position: absolute!important;
+    }
+    @media screen and (max-width: 1200px){
+        .details{
+            width: 658px;
+        }
+    }
+    .detailsBox{
+        padding: 32px;
+        display: flex;
+        .details-left{
+            width: 55%;
+            &>p{
+                font-size: 18px;
+                color: rgba(255,255,255,.5);
+                margin-bottom: 9px;
+            }
+            .Dropdown{
+                width: 200px;
+            }
+        }
+        .details-right{
+            width: 45%;
+            position: relative;
+        }
+        .middle-box{
+            height: 340px;
+            margin-bottom: 32px;
+            .middle-box-header{
+                width: 100%;
+                height: 50px;
+                text-align: center;
+                line-height: 50px;
+                background: rgba(24, 169, 193, .15);
+                backdrop-filter: blur(15px) ;
+                border-radius: 15px 15px 0 0;
+                border-bottom: 2px solid rgba(24, 169, 193, .3);
+                box-sizing: border-box;
+                position: absolute;
+                z-index: 10;
+                font-size: 20px;
+                font-weight: bold;
+                color: rgba(255,255,255,.8);
+            }
+            .middle-box-content{
+                height: 100%;
+                border: 2px solid rgba(24, 169, 193, .3);
+                border-top: none;
+                border-radius: 15px 15px;
+                overflow: hidden;
+                backdrop-filter: saturate(60%) blur(20px) brightness(0.5);
+                background: #131c20;
+                /*background-image: url("../assets/img/box-bg.png");*/
+                background-size: 100% 100%;
+                p{
+                    padding: 0 20px;
+                    font-size: 18px;
+                    color: rgba(255,255,255,.5);
+                    line-height: 24px;
+                }
+                div{
+                    height: 62px;
+                }
+            }
+            &:last-child{
+                margin-bottom: 0;
+            }
+        }
     }
 </style>
