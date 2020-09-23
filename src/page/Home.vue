@@ -63,6 +63,11 @@
                 <div id="c2"></div>
             </div>
         </Box>
+        <Box title="车辆检测实时监控" class="details" :hiddenFloat=true rightButton="收起" @hidden="Details = null" v-if="Details">
+            <div class="chartBox">
+
+            </div>
+        </Box>
     </div>
 </template>
 
@@ -116,6 +121,7 @@
                     { month: 'Dec', city: 'Tokyo', temperature: 9.6 },
                     { month: 'Dec', city: 'London', temperature: 4.8 },
                 ],
+                Details: null
             }
         },
         mounted() {
@@ -148,14 +154,22 @@
                         }
                     });
 
+
+                    const dom = document.createElement('div')
+                    dom.className = 'prompt'
+                    dom.innerHTML = `
+                        <p>路口1</p>
+                        <p>路口编号：yuannan-101</p>
+                        <p>路口地址：广东省深圳市龙岗区五和路口</p>
+                    `
+                    const p = document.createElement('p')
+                    p.innerHTML = '了解详情'
+                    p.onclick = () => this.Details = {}
+                    dom.appendChild(p)
+
                     windows.push({
                         position: [121.6035, 31.197646 + i * 0.001 - 0.0035],
-                        content: `<div class="prompt">
-                            <p>路口1</p>
-                            <p>路口编号：yuannan-101</p>
-                            <p>路口地址：广东省深圳市龙岗区五和路口</p>
-                            <p>了解详情</p>
-                        </div>`,
+                        content: dom,
                         visible: false
                     });
                 }
@@ -463,5 +477,9 @@
     }
     #c2{
         margin-top: 5%;
+    }
+    .details{
+        width: calc(58.75% - 32px);
+        position: absolute!important;
     }
 </style>
