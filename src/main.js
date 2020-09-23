@@ -3,10 +3,15 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import './main.scss'
 import VueAMap from 'vue-amap'
+import Antd from 'ant-design-vue'
+import 'ant-design-vue/dist/antd.css'
+
 Vue.config.productionTip = false
 
 Vue.use(VueAMap)
+Vue.use(Antd)
 
 VueAMap.initAMapApiLoader({
   key: '72a33bd05c5a2def4bea81c2397a34a8',
