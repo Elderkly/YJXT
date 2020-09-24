@@ -72,22 +72,26 @@
                         <div class="SZ">
                             <CrossingItem/>
                             <CrossingItem class="SZ-last-crossing" :blur="true"/>
-                            <div class="light" v-for="(item, index) in Details.element">
-                                <img v-for="light in item.passStatus" :src="light ? require('../assets/img/circle-red.png') : require('../assets/img/circle-blue.png')"/>
-                            </div>
-                            <div class="element-details" v-for="(item, index) in Details.element" :style="{flexDirection: index === 0 || index === 2 ? 'column' : 'row'}">
-                                <p :style="{width: index === 0 || index === 2 ? 'auto' : '15px'}" v-if="index === 0 || index === 1">{{item.name}}</p>
-                                <div>
-<!--                                    <img src="../assets/img/video.png" class="video"  v-if="index === 2 && item.video"/>-->
-                                    <img :src="item.signalIcon" class="signalIcon"/>
-                                    <div class="electricQuantity">
-                                        <div :style="{width: item.electricQuantity > 78 ? '78%' : item.electricQuantity + '%', background: item.electricQuantity > 50 ? '#18A9C1' : item.electricQuantity > 20 ? '#C18E18' : '#C18E18',position: 'absolute',height:'78%'}"/>
-                                        <span>{{item.electricQuantity}}%</span>
-                                    </div>
-                                    <img src="../assets/img/video.png" class="video" v-if="item.video"/>
+                            <div class="light-box">
+                                <div class="light" v-for="(item, index) in Details.element">
+                                    <img v-for="light in item.passStatus" :src="light ? require('../assets/img/circle-red.png') : require('../assets/img/circle-blue.png')"/>
                                 </div>
-                                <p :style="{width: index === 0 || index === 2 ? 'auto' : '15px'}" v-if="index > 1">{{item.name}}</p>
                             </div>
+                           <div class="element-box">
+                               <div class="element-details" v-for="(item, index) in Details.element" :style="{flexDirection: index === 0 || index === 2 ? 'column' : 'row'}">
+                                   <p :style="{width: index === 0 || index === 2 ? 'auto' : '15px'}" v-if="index === 0 || index === 1">{{item.name}}</p>
+                                   <div>
+                                       <img :src="item.signalIcon" class="signalIcon"/>
+                                       <div class="electricQuantity">
+                                           <div :style="{width: item.electricQuantity > 78 ? '78%' : item.electricQuantity + '%', background: item.electricQuantity > 50 ? '#18A9C1' : item.electricQuantity > 20 ? '#C18E18' : '#C18E18',position: 'absolute',height:'78%'}"/>
+                                           <span>{{item.electricQuantity}}%</span>
+                                       </div>
+                                       <img src="../assets/img/video.png" class="video" v-if="item.video"/>
+                                   </div>
+                                   <p :style="{width: index === 0 || index === 2 ? 'auto' : '15px'}" v-if="index > 1">{{item.name}}</p>
+                               </div>
+                           </div>
+
                         </div>
                     </div>
                 </div>
@@ -192,10 +196,10 @@
                         },
                         {
                             name: '一号单元',            //  单元名称
-                            signal: 2,                //  信号强度
-                            signalIcon: require('../assets/img/signal-2.png'),//    信号图片
-                            electricQuantity: 10,     //  电量
-                            passStatus: [true, true],//  车辆经过状态 对应每一个灯
+                            signal: 3,                //  信号强度
+                            signalIcon: require('../assets/img/signal-3.png'),//    信号图片
+                            electricQuantity: 60,     //  电量
+                            passStatus: [false, false],//  车辆经过状态 对应每一个灯
                             video: '123',                //  录像
                         },
                         {
@@ -213,7 +217,7 @@
                             electricQuantity: 60,     //  电量
                             passStatus: [false, false],//  车辆经过状态 对应每一个灯
                             video: '123',                //  录像
-                        }
+                        },
                     ]
                 }
             }
@@ -663,62 +667,66 @@
                 transform: rotate(90deg);
                 opacity: 1;
             }
-            .light:nth-child(3){
-                left: 18px;
-                bottom: 221px;
-                img:first-child{
-                    margin-right: 47px;
+            .light-box{
+                .light:nth-child(1){
+                    left: 18px;
+                    bottom: 221px;
+                    img:first-child{
+                        margin-right: 47px;
+                    }
+                }
+                .light:nth-child(2){
+                    right: 170px;
+                    bottom: 75px;
+                    flex-direction: column;
+                    img:first-child{
+                        margin-bottom: 47px;
+                    }
+                }
+                .light:nth-child(3){
+                    right: 20px;
+                    top: 220px;
+                    img:first-child{
+                        margin-right: 47px;
+                    }
+                }
+                .light:nth-child(4){
+                    left: 170px;
+                    top: 75px;
+                    flex-direction: column;
+                    img:first-child{
+                        margin-bottom: 47px;
+                    }
                 }
             }
-            .light:nth-child(4){
-                right: 170px;
-                bottom: 75px;
-                flex-direction: column;
-                img:first-child{
-                    margin-bottom: 47px;
+            .element-box{
+                .element-details:nth-child(1){
+                    left: 50px;
+                    bottom: 32px;
+                    &>div{
+                        justify-content: flex-start;
+                    }
                 }
-            }
-            .light:nth-child(5){
-                right: 20px;
-                top: 220px;
-                img:first-child{
-                    margin-right: 47px;
+                .element-details:nth-child(2){
+                    right: 45px;
+                    bottom: 62px;
+                    p{
+                        margin-right: 10px;
+                    }
                 }
-            }
-            .light:nth-child(6){
-                left: 170px;
-                top: 75px;
-                flex-direction: column;
-                img:first-child{
-                    margin-bottom: 47px;
+                .element-details:nth-child(3){
+                    right: 50px;
+                    top: 50px;
+                    &>div{
+                        justify-content: flex-end;
+                    }
                 }
-            }
-            .element-details:nth-child(7){
-                left: 50px;
-                bottom: 32px;
-                &>div{
-                    justify-content: flex-start;
-                }
-            }
-            .element-details:nth-child(8){
-                right: 45px;
-                bottom: 62px;
-                p{
-                    margin-right: 10px;
-                }
-            }
-            .element-details:nth-child(9){
-                right: 50px;
-                top: 50px;
-                &>div{
-                    justify-content: flex-end;
-                }
-            }
-            .element-details:nth-child(10){
-                left: 50px;
-                top: 70px;
-                p{
-                    margin-left: 10px;
+                .element-details:nth-child(4){
+                    left: 50px;
+                    top: 70px;
+                    p{
+                        margin-left: 10px;
+                    }
                 }
             }
         }
