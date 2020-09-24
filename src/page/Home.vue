@@ -86,7 +86,7 @@
                                            <div :style="{width: item.electricQuantity > 78 ? '78%' : item.electricQuantity + '%', background: item.electricQuantity > 50 ? '#18A9C1' : item.electricQuantity > 20 ? '#C18E18' : '#C18E18',position: 'absolute',height:'78%'}"/>
                                            <span>{{item.electricQuantity}}%</span>
                                        </div>
-                                       <img src="../assets/img/video.png" class="video" v-if="item.video"/>
+                                       <img src="../assets/img/video.png" class="video" v-if="item.video" @click="openVideo(item)"/>
                                    </div>
                                    <p :style="{width: index === 0 || index === 2 ? 'auto' : '15px'}" v-if="index > 1">{{item.name}}</p>
                                </div>
@@ -191,6 +191,23 @@
                         </ScrollView>
                     </div>
                 </div>
+                <div class="video-box" v-if="!!playUrl">
+                    <div class="video-box-header">
+                        <img src="../assets/img/video.png"/>
+                        <span>主单元监视器画面</span>
+                        <span @click="disposeVideo">关闭</span>
+                    </div>
+                    <div class="video-content">
+                        <video
+                            ref="myVideo"
+                            class="video-js vjs-default-skin vjs-big-play-centered"
+                            controls
+                            preload="auto"
+                            style='width: 100%;height: 100%'
+                            :poster="poster"
+                        />
+                    </div>
+                </div>
             </div>
         </Box>
     </div>
@@ -203,7 +220,8 @@
     import DatePicker from '../components/DatePicker'
     import {Chart,getEngine} from "@antv/g2";
     import CrossingItem from '../components/CrossingItem'
-
+    import videojs from 'video.js'
+    import 'videojs-contrib-hls'
     export default {
         data() {
             return {
@@ -247,46 +265,55 @@
                     { month: 'Dec', city: 'Tokyo', temperature: 9.6 },
                     { month: 'Dec', city: 'London', temperature: 4.8 },
                 ],
-                // Details: null
-                Details: {
-                    action: 'yuannan-01',
-                    list: ['yuannan-01','yunan-02','yunan-03'],
-                    type: 'crossroad',        //  路口类型  十字 crossroad     T形 TCrossing      人形 PCrossing
-                    element: [
-                        {
-                            name: '主单元',            //  单元名称
-                            signal: 4,                //  信号强度
-                            signalIcon: require('../assets/img/signal-4.png'),//    信号图片
-                            electricQuantity: 80,     //  电量
-                            passStatus: [false, true],//  车辆经过状态 对应每一个灯
-                            video: '123',                //  录像
-                        },
-                        {
-                            name: '一号单元',            //  单元名称
-                            signal: 3,                //  信号强度
-                            signalIcon: require('../assets/img/signal-3.png'),//    信号图片
-                            electricQuantity: 60,     //  电量
-                            passStatus: [false, false],//  车辆经过状态 对应每一个灯
-                            video: '123',                //  录像
-                        },
-                        // {
-                        //     name: '二号单元',            //  单元名称
-                        //     signal: 1,                //  信号强度
-                        //     signalIcon: require('../assets/img/signal-1.png'),//    信号图片
-                        //     electricQuantity: 10,     //  电量
-                        //     passStatus: [false, false],//  车辆经过状态 对应每一个灯
-                        //     video: '123',                //  录像
-                        // },
-                        // {
-                        //     name: '三号单元',            //  单元名称
-                        //     signal: 3,                //  信号强度
-                        //     signalIcon: require('../assets/img/signal-3.png'),//    信号图片
-                        //     electricQuantity: 60,     //  电量
-                        //     passStatus: [false, false],//  车辆经过状态 对应每一个灯
-                        //     video: '123',                //  录像
-                        // },
-                    ]
-                }
+                Details: null,
+                // Details: {
+                //     action: 'yuannan-01',
+                //     list: ['yuannan-01','yunan-02','yunan-03'],
+                //     type: 'crossroad',        //  路口类型  十字 crossroad     T形 TCrossing      人形 PCrossing
+                //     element: [
+                //         {
+                //             name: '主单元',            //  单元名称
+                //             signal: 4,                //  信号强度
+                //             signalIcon: require('../assets/img/signal-4.png'),//    信号图片
+                //             electricQuantity: 80,     //  电量
+                //             passStatus: [false, true],//  车辆经过状态 对应每一个灯
+                //             video: '123',                //  录像
+                //         },
+                //         {
+                //             name: '一号单元',            //  单元名称
+                //             signal: 3,                //  信号强度
+                //             signalIcon: require('../assets/img/signal-3.png'),//    信号图片
+                //             electricQuantity: 60,     //  电量
+                //             passStatus: [false, false],//  车辆经过状态 对应每一个灯
+                //             video: '123',                //  录像
+                //         },
+                //         // {
+                //         //     name: '二号单元',            //  单元名称
+                //         //     signal: 1,                //  信号强度
+                //         //     signalIcon: require('../assets/img/signal-1.png'),//    信号图片
+                //         //     electricQuantity: 10,     //  电量
+                //         //     passStatus: [false, false],//  车辆经过状态 对应每一个灯
+                //         //     video: '123',                //  录像
+                //         // },
+                //         // {
+                //         //     name: '三号单元',            //  单元名称
+                //         //     signal: 3,                //  信号强度
+                //         //     signalIcon: require('../assets/img/signal-3.png'),//    信号图片
+                //         //     electricQuantity: 60,     //  电量
+                //         //     passStatus: [false, false],//  车辆经过状态 对应每一个灯
+                //         //     video: '123',                //  录像
+                //         // },
+                //     ]
+                // },
+                playUrl: ''
+            }
+        },
+        computed: {
+            poster: function() {
+                // return this.posterSrc
+                //     ? this.posterSrc
+                //     : require("./../assets/images/coveImg.png");
+                return require('../assets/img/video.png')
             }
         },
         mounted() {
@@ -331,7 +358,45 @@
                     `
                     const p = document.createElement('p')
                     p.innerHTML = '了解详情'
-                    p.onclick = () => this.Details = {}
+                    p.onclick = () => this.Details = {
+                        action: 'yuannan-01',
+                            list: ['yuannan-01','yunan-02','yunan-03'],
+                            type: 'crossroad',        //  路口类型  十字 crossroad     T形 TCrossing      人形 PCrossing
+                            element: [
+                            {
+                                name: '主单元',            //  单元名称
+                                signal: 4,                //  信号强度
+                                signalIcon: require('../assets/img/signal-4.png'),//    信号图片
+                                electricQuantity: 80,     //  电量
+                                passStatus: [false, true],//  车辆经过状态 对应每一个灯
+                                video: '123',                //  录像
+                            },
+                            {
+                                name: '一号单元',            //  单元名称
+                                signal: 3,                //  信号强度
+                                signalIcon: require('../assets/img/signal-3.png'),//    信号图片
+                                electricQuantity: 60,     //  电量
+                                passStatus: [false, false],//  车辆经过状态 对应每一个灯
+                                video: '123',                //  录像
+                            },
+                            // {
+                            //     name: '二号单元',            //  单元名称
+                            //     signal: 1,                //  信号强度
+                            //     signalIcon: require('../assets/img/signal-1.png'),//    信号图片
+                            //     electricQuantity: 10,     //  电量
+                            //     passStatus: [false, false],//  车辆经过状态 对应每一个灯
+                            //     video: '123',                //  录像
+                            // },
+                            // {
+                            //     name: '三号单元',            //  单元名称
+                            //     signal: 3,                //  信号强度
+                            //     signalIcon: require('../assets/img/signal-3.png'),//    信号图片
+                            //     electricQuantity: 60,     //  电量
+                            //     passStatus: [false, false],//  车辆经过状态 对应每一个灯
+                            //     video: '123',                //  录像
+                            // },
+                        ]
+                    },
                     dom.appendChild(p)
 
                     windows.push({
@@ -512,6 +577,49 @@
 
                 //  渲染图表
                 chart.render();
+            },
+            //  初始化视频组件
+            initVideo(){
+                return new Promise(resolve => {
+                    this.$nextTick(() => {
+                        this.myVideo = videojs(this.$refs.myVideo, {
+                            bigPlayButton: true,
+                            textTrackDisplay: false,
+                            posterImage: false,
+                            errorDisplay: false,
+                            controlBar : false,
+                            hls: {
+                                withCredentials: true
+                            }
+                        });
+                        resolve()
+                    });
+                })
+            },
+            //  打开视频
+            openVideo(item) {
+                this.playUrl = 'http://1252093142.vod2.myqcloud.com/4704461fvodcq1252093142/48c8a9475285890781000441992/playlist.m3u8'
+                if (this.myVideo) {
+                    this.myVideo.src({
+                        src: this.playUrl,
+                        type: 'application/x-mpegURL'
+                    })
+                    this.myVideo.play()
+                } else {
+                    this.initVideo().then(() => {
+                        this.myVideo.src({
+                            src: this.playUrl,
+                            type: 'application/x-mpegURL'
+                        })
+                        this.myVideo.play()
+                    })
+                }
+            },
+            //  摧毁视频
+            disposeVideo() {
+                this.myVideo && this.myVideo.dispose();
+                this.myVideo = null
+                this.playUrl = null
             }
         },
         components: {
@@ -1002,6 +1110,48 @@
             .video{
                 width: 62px;
                 margin-bottom: 8px;
+                cursor: pointer;
+            }
+        }
+        .video-box{
+            width: 640px;
+            height: 412px;
+            border-radius: 15px;
+            background: rgba(24, 169, 193, .15);
+            backdrop-filter: blur(15px) ;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            margin: auto;
+            padding: 12px 16px 16px;
+            z-index: 20;
+            .video-box-header{
+                display: flex;
+                img{
+                    width: 62px;
+                }
+                span:nth-child(2) {
+                    font-size: 23px;
+                    font-weight: bold;
+                    color: rgba(255,255,255,.8);
+                    margin-left: 6px;
+                    flex: 1;
+                }
+                span:nth-child(3) {
+                    font-size: 23px;
+                    font-weight: bold;
+                    color: rgba(24, 169, 193, 1);
+                    cursor: pointer;
+                }
+            }
+            .video-content{
+                height: 342px;
+                border-radius: 9px;
+                margin-top: 12px;
+                background: #999;
+                overflow: hidden;
             }
         }
     }
