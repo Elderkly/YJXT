@@ -68,7 +68,28 @@
                 <div class="details-left">
                     <p>当前路口编号</p>
                     <Dropdown :data="Details.list" v-model="Details.action" class="Dropdown"/>
-                    <div class="crossing"></div>
+                    <div class="crossing">
+                        <div class="SZ">
+                            <CrossingItem/>
+                            <CrossingItem class="SZ-last-crossing" :blur="true"/>
+                            <div class="light" v-for="(item, index) in Details.element">
+                                <img v-for="light in item.passStatus" :src="light ? require('../assets/img/circle-red.png') : require('../assets/img/circle-blue.png')"/>
+                            </div>
+                            <div class="element-details" v-for="(item, index) in Details.element" :style="{flexDirection: index === 0 || index === 2 ? 'column' : 'row'}">
+                                <p :style="{width: index === 0 || index === 2 ? 'auto' : '15px'}" v-if="index === 0 || index === 1">{{item.name}}</p>
+                                <div>
+<!--                                    <img src="../assets/img/video.png" class="video"  v-if="index === 2 && item.video"/>-->
+                                    <img :src="item.signalIcon" class="signalIcon"/>
+                                    <div class="electricQuantity">
+                                        <div :style="{width: item.electricQuantity > 78 ? '78%' : item.electricQuantity + '%', background: item.electricQuantity > 50 ? '#18A9C1' : item.electricQuantity > 20 ? '#C18E18' : '#C18E18',position: 'absolute',height:'78%'}"/>
+                                        <span>{{item.electricQuantity}}%</span>
+                                    </div>
+                                    <img src="../assets/img/video.png" class="video" v-if="item.video"/>
+                                </div>
+                                <p :style="{width: index === 0 || index === 2 ? 'auto' : '15px'}" v-if="index > 1">{{item.name}}</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="details-right">
                     <div class="middle-box">
@@ -110,6 +131,7 @@
     import Dropdown from '../components/Dropdown'
     import DatePicker from '../components/DatePicker'
     import {Chart,getEngine} from "@antv/g2";
+    import CrossingItem from '../components/CrossingItem'
 
     export default {
         data() {
@@ -157,7 +179,42 @@
                 // Details: null
                 Details: {
                     action: 'yuannan-01',
-                    list: ['yuannan-01','yunan-02','yunan-03']
+                    list: ['yuannan-01','yunan-02','yunan-03'],
+                    type: 'crossroad',        //  路口类型
+                    element: [
+                        {
+                            name: '主单元',            //  单元名称
+                            signal: 4,                //  信号强度
+                            signalIcon: require('../assets/img/signal-4.png'),//    信号图片
+                            electricQuantity: 80,     //  电量
+                            passStatus: [false, true],//  车辆经过状态 对应每一个灯
+                            video: '123',                //  录像
+                        },
+                        {
+                            name: '一号单元',            //  单元名称
+                            signal: 2,                //  信号强度
+                            signalIcon: require('../assets/img/signal-2.png'),//    信号图片
+                            electricQuantity: 10,     //  电量
+                            passStatus: [true, true],//  车辆经过状态 对应每一个灯
+                            video: '123',                //  录像
+                        },
+                        {
+                            name: '二号单元',            //  单元名称
+                            signal: 1,                //  信号强度
+                            signalIcon: require('../assets/img/signal-1.png'),//    信号图片
+                            electricQuantity: 10,     //  电量
+                            passStatus: [false, false],//  车辆经过状态 对应每一个灯
+                            video: '123',                //  录像
+                        },
+                        {
+                            name: '三号单元',            //  单元名称
+                            signal: 3,                //  信号强度
+                            signalIcon: require('../assets/img/signal-3.png'),//    信号图片
+                            electricQuantity: 60,     //  电量
+                            passStatus: [false, false],//  车辆经过状态 对应每一个灯
+                            video: '123',                //  录像
+                        }
+                    ]
                 }
             }
         },
@@ -390,7 +447,8 @@
             Box,
             ScrollView,
             Dropdown,
-            DatePicker
+            DatePicker,
+            CrossingItem
         }
     }
 </script>
@@ -548,7 +606,7 @@
             position: relative;
         }
         .middle-box{
-            height: 340px;
+            height: 390px;
             margin-bottom: 32px;
             .middle-box-header{
                 width: 100%;
@@ -591,10 +649,137 @@
             }
         }
         .crossing{
-            height: 200px;
-            background: red;
             margin-top: 42px;
             margin-right: 32px;
+        }
+        .SZ{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            height: 590px;
+            .SZ-last-crossing{
+                position: absolute;
+                transform: rotate(90deg);
+                opacity: 1;
+            }
+            .light:nth-child(3){
+                left: 18px;
+                bottom: 221px;
+                img:first-child{
+                    margin-right: 47px;
+                }
+            }
+            .light:nth-child(4){
+                right: 170px;
+                bottom: 75px;
+                flex-direction: column;
+                img:first-child{
+                    margin-bottom: 47px;
+                }
+            }
+            .light:nth-child(5){
+                right: 20px;
+                top: 220px;
+                img:first-child{
+                    margin-right: 47px;
+                }
+            }
+            .light:nth-child(6){
+                left: 170px;
+                top: 75px;
+                flex-direction: column;
+                img:first-child{
+                    margin-bottom: 47px;
+                }
+            }
+            .element-details:nth-child(7){
+                left: 50px;
+                bottom: 32px;
+                &>div{
+                    justify-content: flex-start;
+                }
+            }
+            .element-details:nth-child(8){
+                right: 45px;
+                bottom: 62px;
+                p{
+                    margin-right: 10px;
+                }
+            }
+            .element-details:nth-child(9){
+                right: 50px;
+                top: 50px;
+                &>div{
+                    justify-content: flex-end;
+                }
+            }
+            .element-details:nth-child(10){
+                left: 50px;
+                top: 70px;
+                p{
+                    margin-left: 10px;
+                }
+            }
+        }
+        .light{
+            display: flex;
+            position: absolute;
+            img{
+                width: 40px;
+            }
+        }
+        .element-details{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: absolute;
+            &>div{
+                width: 70px;
+                height: 130px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+            p{
+                font-size: 14px;
+                color: rgba(255,255,255,.61);
+                margin-bottom: 8px;
+            }
+            .signalIcon{
+                width: 62px;
+                margin-bottom: 8px;
+            }
+            .electricQuantity{
+                width: 70px;
+                height: 30px;
+                background-image: url("../assets/img/cell.png");
+                background-size: 100% 100%;
+                padding: 4px;
+                position: relative;
+                font-size: 18px;
+                font-weight: bold;
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                box-sizing: border-box;
+                margin-bottom: 8px;
+                div{
+                    border-radius: 2px;
+                }
+                span{
+                    position: absolute;
+                    left: 0;
+                    right: 0;
+                    margin: auto;
+                    text-align: center;
+                }
+            }
+            .video{
+                width: 70px;
+                margin-bottom: 8px;
+            }
         }
     }
 </style>
