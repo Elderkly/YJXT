@@ -16,7 +16,7 @@
             </el-amap>
             <div class="map-fixedBox">
                 <div class="map-fixedBox-header">路口列表</div>
-                <ScrollView class="map-fixedBox-content" height='221' :itemNum="7">
+                <ScrollView class="map-fixedBox-content" boxClass="map-fixedBox-scrollBox">
                     <div></div>
                     <div class="ellipsis">路口1123123112312323</div>
                     <div>路口2</div>
@@ -68,11 +68,12 @@
                 <div class="details-left">
                     <p>当前路口编号</p>
                     <Dropdown :data="Details.list" v-model="Details.action" class="Dropdown"/>
+                    <div class="crossing"></div>
                 </div>
                 <div class="details-right">
                     <div class="middle-box">
                         <div class="middle-box-header">实时预警检测状态更新</div>
-                        <ScrollView class="middle-box-content" height='340' type="text">
+                        <ScrollView class="middle-box-content" boxClass="details-scrollBox" type="text">
                             <div></div>
                             <p>CNN15日题为《随着消费者加入到经济复苏的行列中，中国经济摆脱了全球衰退的影响》的报道称，
                                 新冠疫情大流行将全球经济推向低谷，但中国经济正在逆流而上。中国经济已经连续多个月处于复苏模式，现在，消费者也愿意出来花钱了。</p>
@@ -80,7 +81,7 @@
                     </div>
                     <div class="middle-box">
                         <div class="middle-box-header">运行日志信息显示</div>
-                        <ScrollView class="middle-box-content" height='340' type="text">
+                        <ScrollView class="middle-box-content" boxClass="details-scrollBox" type="text">
                             <div></div>
                             <p>CNN15日题为《随着消费者加入到经济复苏的行列中，中国经济摆脱了全球衰退的影响》的报道称，新冠疫情大流行将全球经济推向低谷，但中国经济正在逆流而上。中国经济已经连续多个月处于复苏模式，现在，消费者也愿意出来花钱了。
 
@@ -162,8 +163,10 @@
         },
         mounted() {
             this.initMap()
-            this.createChart1()
-            this.createChart2()
+            setTimeout(() => {
+                this.createChart1()
+                this.createChart2()
+            },500)
         },
         methods: {
             initMap() {
@@ -217,10 +220,11 @@
             },
             //  环图
             createChart1() {
+                const windowWidth = document.documentElement.clientWidth
                 const chart = new Chart({
                     container: 'c1',
                     autoFit: true,
-                    height: 200,
+                    height: windowWidth * 0.11,
                 });
                 chart.data(this.list1);
                 chart.scale('percent', {
@@ -264,8 +268,8 @@
                             const inRight = y0 < y1;
                             const textAlign = inRight ? 'left' : 'right';
 
-                            const topFontSize = 14;
-                            const bottomFontSize = 18;
+                            const topFontSize = windowWidth * 0.00729166;
+                            const bottomFontSize = windowWidth * 0.009375;
                             group.addShape({
                                 type: 'text',
                                 attrs: {
@@ -312,10 +316,11 @@
             },
             //  折线图
             createChart2() {
+                const windowWidth = document.documentElement.clientWidth
                 // Step 1: 创建 Chart 对象
                 const chart = new Chart({
                     container: 'c2', // 指定图表容器 ID
-                    height : 300, // 指定图表高度
+                    height : windowWidth * 0.12, // 指定图表高度
                     autoFit: true,
                 });
 
@@ -399,8 +404,8 @@
             width: 58%;
         }
         .chart{
-            width: 40%;
-            margin-left: 2%;
+            width: 40.5%;
+            margin-left: 1.5%;
         }
     }
 
@@ -519,11 +524,11 @@
         width: 58%;
         position: absolute!important;
     }
-    @media screen and (max-width: 1200px){
-        .details{
-            width: 658px;
-        }
-    }
+    /*@media screen and (max-width: 1200px){*/
+    /*    .details{*/
+    /*        width: 658px;*/
+    /*    }*/
+    /*}*/
     .detailsBox{
         padding: 32px;
         display: flex;
@@ -584,6 +589,12 @@
             &:last-child{
                 margin-bottom: 0;
             }
+        }
+        .crossing{
+            height: 200px;
+            background: red;
+            margin-top: 42px;
+            margin-right: 32px;
         }
     }
 </style>

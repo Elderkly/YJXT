@@ -62,11 +62,11 @@
             width: 16px;
         }
     }
-    @media screen and (max-width: 1650px){
-        .textBox{
-            span{
-                font-size: 15px;
-            }
-        }
-    }
+    /*@media screen and (max-width: 1650px){*/
+    /*    .textBox{*/
+    /*        span{*/
+    /*            font-size: 15px;*/
+    /*        }*/
+    /*    }*/
+    /*}*/
 </style>

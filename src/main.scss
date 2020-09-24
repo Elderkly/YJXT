@@ -1,23 +1,31 @@
 html,body{
     padding: 0;
     margin: 0;
+    background: #000!important;
 }
 p{
     margin: 0;
 }
 #app{
-    background: #000;
     color: #fff;
-    height: 100vh;
+    //height: 100vh;
     font-family: "Microsoft YaHei";
-    min-width: 1200px;
+}
+/* 定义滚动条样式 */
+::-webkit-scrollbar {
+    display: none;
 }
 #content{
-    padding: 32px
+    padding: 1.5%
 }
 .ellipsis{
     overflow:hidden; //超出的文本隐藏
     text-overflow:ellipsis; //用省略号显示
     white-space:nowrap; //不换行
 }
-
+.details-scrollBox{
+    height: 340px;
+}
+.map-fixedBox-scrollBox{
+    height: 221px;
+}

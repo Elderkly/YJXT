@@ -1,6 +1,6 @@
 <template>
     <div class="scroll-box">
-        <div class="scroll-view" :style="{height: this.height + 'px'}" ref="scrollView">
+        <div :class="'scroll-view ' + boxClass" ref="scrollView">
             <div ref="slot">
                 <slot/>
             </div>
@@ -14,18 +14,17 @@
 <script>
     export default {
         name: 'ScrollView',
-        props: ['height','type','itemNum'],
+        props: ['boxClass','type'],
         mounted() {
             //  动态计算滑块高度
-            const itemHeight = 51
-            const itemNum = this.itemNum
             const headerHeight = 50
-            const contentHeight = this.type === 'text' ? this.$refs.slot.clientHeight : itemHeight * itemNum
+            const contentHeight = this.$refs.slot.clientHeight
+            const height = this.$refs.scrollView.clientHeight
             //  如果内容高度小于窗口高度则隐藏滚动条
-            if (contentHeight < Number(this.height)) {
+            if (contentHeight < height) {
                 this.$refs.scrollBar.style.opacity = 0
             } else {
-                const nums = (Number(this.height) - headerHeight) / contentHeight
+                const nums = (height - headerHeight) / contentHeight
                 this.$refs.thumb.style.height = `${nums * 100}%`
                 console.log(nums)
                 this.createListen()
@@ -38,7 +37,7 @@
                      * 滑块滑行距离 = 滚动高度 / （内容高度 - 盒子高度）
                      * */
                     const {scrollBar,thumb,slot,scrollView} = this.$refs
-                    const scrollHeight = scrollView.scrollTop / (slot.clientHeight - Number(this.height))
+                    const scrollHeight = scrollView.scrollTop / (slot.clientHeight - scrollView.clientHeight)
                     const scrollBoxHeight = scrollBar.clientHeight - thumb.clientHeight
                     const moveHeight = Math.min(scrollHeight * scrollBoxHeight, scrollBoxHeight)
                     this.$refs.thumb.style.cssText += `margin-top:${moveHeight}px`
