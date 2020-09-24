@@ -69,9 +69,9 @@
                     <p>当前路口编号</p>
                     <Dropdown :data="Details.list" v-model="Details.action" class="Dropdown"/>
                     <div class="crossing">
-                        <div class="SZ">
+                        <div class="SZ" v-if="Details.type === 'crossroad'">
                             <CrossingItem/>
-                            <CrossingItem class="SZ-last-crossing" :blur="true"/>
+                            <CrossingItem class="SZ-last-crossing" :blur="true" :big="true"/>
                             <div class="light-box">
                                 <div class="light" v-for="(item, index) in Details.element">
                                     <img v-for="light in item.passStatus" :src="light ? require('../assets/img/circle-red.png') : require('../assets/img/circle-blue.png')"/>
@@ -91,7 +91,74 @@
                                    <p :style="{width: index === 0 || index === 2 ? 'auto' : '15px'}" v-if="index > 1">{{item.name}}</p>
                                </div>
                            </div>
-
+                        </div>
+                        <div class="TX" v-else-if="Details.type === 'TCrossing'">
+                            <CrossingItem class="TX-first-crossing" size="small" :big="true" />
+                            <CrossingItem class="TX-last-crossing" :blur="true" :big="true"/>
+                            <div class="light-box">
+                                <div class="light" v-for="(item, index) in Details.element">
+                                    <img v-for="light in item.passStatus" :src="light ? require('../assets/img/circle-red.png') : require('../assets/img/circle-blue.png')"/>
+                                </div>
+                            </div>
+                            <div class="element-box">
+                                <div class="element-details" v-for="(item, index) in Details.element" :style="{flexDirection: 'row'}" v-if="index === 0">
+                                    <p :style="{width: '15px'}">{{item.name}}</p>
+                                    <div>
+                                        <img :src="item.signalIcon" class="signalIcon"/>
+                                        <div class="electricQuantity">
+                                            <div :style="{width: item.electricQuantity > 78 ? '78%' : item.electricQuantity + '%', background: item.electricQuantity > 50 ? '#18A9C1' : item.electricQuantity > 20 ? '#C18E18' : '#C18E18',position: 'absolute',height:'78%'}"/>
+                                            <span>{{item.electricQuantity}}%</span>
+                                        </div>
+                                        <img src="../assets/img/video.png" class="video" v-if="item.video"/>
+                                    </div>
+                                </div>
+                                <div class="element-details TX-Row-Box" v-for="(item, index) in Details.element" :style="{flexDirection: 'row'}" v-if="index !== 0">
+                                    <div>
+                                        <p>{{item.name}}</p>
+                                        <div class="electricQuantity">
+                                            <div :style="{width: item.electricQuantity > 78 ? '78%' : item.electricQuantity + '%', background: item.electricQuantity > 50 ? '#18A9C1' : item.electricQuantity > 20 ? '#C18E18' : '#C18E18',position: 'absolute',height:'78%'}"/>
+                                            <span>{{item.electricQuantity}}%</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <img :src="item.signalIcon" class="signalIcon"/>
+                                        <img src="../assets/img/video.png" class="video" v-if="item.video"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="RX" v-else>
+                            <CrossingItem class="RX-first-crossing" size="mini" :big="true" />
+                            <CrossingItem class="RX-last-crossing" :blur="true" :big="true"/>
+                            <div class="light-box">
+                                <div class="light" v-for="(item, index) in Details.element">
+                                    <img v-for="light in item.passStatus" :src="light ? require('../assets/img/circle-red.png') : require('../assets/img/circle-blue.png')"/>
+                                </div>
+                            </div>
+                            <div class="element-box">
+                                <div class="element-details RX-Row-Box" v-for="(item, index) in Details.element" :style="{flexDirection: 'row'}" v-if="index === 0">
+                                    <div>
+                                        <p>{{item.name}}</p>
+                                        <img :src="item.signalIcon" class="signalIcon"/>
+                                    </div>
+                                    <div>
+                                        <div class="electricQuantity">
+                                            <div :style="{width: item.electricQuantity > 78 ? '78%' : item.electricQuantity + '%', background: item.electricQuantity > 50 ? '#18A9C1' : item.electricQuantity > 20 ? '#C18E18' : '#C18E18',position: 'absolute',height:'78%'}"/>
+                                            <span>{{item.electricQuantity}}%</span>
+                                        </div>
+                                        <img src="../assets/img/video.png" class="video" v-if="item.video"/>
+                                    </div>
+                                </div>
+                                <div class="element-details RX-Column-Box" v-for="(item, index) in Details.element" :style="{flexDirection: 'column'}" v-if="index !== 0">
+                                    <p>{{item.name}}</p>
+                                    <img :src="item.signalIcon" class="signalIcon"/>
+                                    <div class="electricQuantity">
+                                        <div :style="{width: item.electricQuantity > 78 ? '78%' : item.electricQuantity + '%', background: item.electricQuantity > 50 ? '#18A9C1' : item.electricQuantity > 20 ? '#C18E18' : '#C18E18',position: 'absolute',height:'78%'}"/>
+                                        <span>{{item.electricQuantity}}%</span>
+                                    </div>
+                                    <img src="../assets/img/video.png" class="video" :style="{opacity: item.video ? 1 : 0}"/>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -184,7 +251,7 @@
                 Details: {
                     action: 'yuannan-01',
                     list: ['yuannan-01','yunan-02','yunan-03'],
-                    type: 'crossroad',        //  路口类型
+                    type: 'crossroad',        //  路口类型  十字 crossroad     T形 TCrossing      人形 PCrossing
                     element: [
                         {
                             name: '主单元',            //  单元名称
@@ -202,22 +269,22 @@
                             passStatus: [false, false],//  车辆经过状态 对应每一个灯
                             video: '123',                //  录像
                         },
-                        {
-                            name: '二号单元',            //  单元名称
-                            signal: 1,                //  信号强度
-                            signalIcon: require('../assets/img/signal-1.png'),//    信号图片
-                            electricQuantity: 10,     //  电量
-                            passStatus: [false, false],//  车辆经过状态 对应每一个灯
-                            video: '123',                //  录像
-                        },
-                        {
-                            name: '三号单元',            //  单元名称
-                            signal: 3,                //  信号强度
-                            signalIcon: require('../assets/img/signal-3.png'),//    信号图片
-                            electricQuantity: 60,     //  电量
-                            passStatus: [false, false],//  车辆经过状态 对应每一个灯
-                            video: '123',                //  录像
-                        },
+                        // {
+                        //     name: '二号单元',            //  单元名称
+                        //     signal: 1,                //  信号强度
+                        //     signalIcon: require('../assets/img/signal-1.png'),//    信号图片
+                        //     electricQuantity: 10,     //  电量
+                        //     passStatus: [false, false],//  车辆经过状态 对应每一个灯
+                        //     video: '123',                //  录像
+                        // },
+                        // {
+                        //     name: '三号单元',            //  单元名称
+                        //     signal: 3,                //  信号强度
+                        //     signalIcon: require('../assets/img/signal-3.png'),//    信号图片
+                        //     electricQuantity: 60,     //  电量
+                        //     passStatus: [false, false],//  车辆经过状态 对应每一个灯
+                        //     video: '123',                //  录像
+                        // },
                     ]
                 }
             }
@@ -586,16 +653,11 @@
         width: 58%;
         position: absolute!important;
     }
-    /*@media screen and (max-width: 1200px){*/
-    /*    .details{*/
-    /*        width: 658px;*/
-    /*    }*/
-    /*}*/
     .detailsBox{
         padding: 32px;
         display: flex;
         .details-left{
-            width: 55%;
+            width: calc(100% - 380px);
             &>p{
                 font-size: 18px;
                 color: rgba(255,255,255,.5);
@@ -606,12 +668,12 @@
             }
         }
         .details-right{
-            width: 45%;
+            width: 380px;
             position: relative;
         }
         .middle-box{
-            height: 390px;
-            margin-bottom: 32px;
+            /*height: 390px;*/
+            margin-bottom: 5%;
             .middle-box-header{
                 width: 100%;
                 height: 50px;
@@ -653,15 +715,17 @@
             }
         }
         .crossing{
-            margin-top: 42px;
+            margin-top: 22px;
             margin-right: 32px;
+            &>div{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+                height: 590px;
+            }
         }
         .SZ{
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            height: 590px;
             .SZ-last-crossing{
                 position: absolute;
                 transform: rotate(90deg);
@@ -669,14 +733,14 @@
             }
             .light-box{
                 .light:nth-child(1){
-                    left: 18px;
+                    left: 58px;
                     bottom: 221px;
                     img:first-child{
                         margin-right: 47px;
                     }
                 }
                 .light:nth-child(2){
-                    right: 170px;
+                    right: 210px;
                     bottom: 75px;
                     flex-direction: column;
                     img:first-child{
@@ -684,14 +748,14 @@
                     }
                 }
                 .light:nth-child(3){
-                    right: 20px;
+                    right: 55px;
                     top: 220px;
                     img:first-child{
                         margin-right: 47px;
                     }
                 }
                 .light:nth-child(4){
-                    left: 170px;
+                    left: 210px;
                     top: 75px;
                     flex-direction: column;
                     img:first-child{
@@ -701,31 +765,182 @@
             }
             .element-box{
                 .element-details:nth-child(1){
-                    left: 50px;
-                    bottom: 32px;
+                    left: 90px;
+                    bottom: 35px;
                     &>div{
                         justify-content: flex-start;
                     }
                 }
                 .element-details:nth-child(2){
-                    right: 45px;
-                    bottom: 62px;
+                    right: 85px;
+                    bottom: 67px;
                     p{
                         margin-right: 10px;
                     }
                 }
                 .element-details:nth-child(3){
-                    right: 50px;
-                    top: 50px;
+                    right: 90px;
+                    top: 40px;
                     &>div{
                         justify-content: flex-end;
                     }
                 }
                 .element-details:nth-child(4){
-                    left: 50px;
-                    top: 70px;
+                    left: 85px;
+                    top: 75px;
                     p{
                         margin-left: 10px;
+                    }
+                }
+            }
+        }
+        .TX{
+            .TX-first-crossing{
+                position: absolute;
+                transform: rotate(90deg);
+                margin-top: 100px;
+            }
+            .TX-last-crossing{
+                margin-top: -150px;
+            }
+            .TX-Row-Box{
+                &>div{
+                    margin-right: 13px;
+                    height: 85px;
+                    justify-content: center;
+                    p{
+                       height: 30px;
+                        width: 82px;
+                        line-height: 40px;
+                    }
+                    &:last-child{
+                        margin-right: 0;
+                    }
+                }
+            }
+            .light-box{
+                .light:nth-child(1){
+                    right: 210px;
+                    bottom: 115px;
+                    flex-direction: column;
+                    img:first-child{
+                        margin-bottom: 47px;
+                    }
+                }
+                .light:nth-child(2){
+                    left: 58px;
+                    bottom: 281px;
+                    img:first-child{
+                        margin-right: 47px;
+                    }
+                }
+                .light:nth-child(3){
+                    right: 60px;
+                    top: 130px;
+                    img:first-child{
+                        margin-right: 47px;
+                    }
+                }
+            }
+            .element-box{
+                .element-details:nth-child(1){
+                    right: 90px;
+                    bottom: 102px;
+                    p{
+                        margin-right: 10px;
+                    }
+                }
+                .element-details:nth-child(2){
+                    left: 40px;
+                    bottom: 172px;
+                    &>div{
+                        justify-content: flex-start;
+                    }
+                }
+                .element-details:nth-child(3){
+                    right: 40px;
+                    top: 30px;
+                    &>div{
+                        justify-content: flex-end;
+                    }
+                }
+            }
+        }
+        .RX{
+            .RX-first-crossing{
+                position: absolute;
+                transform: rotate(130deg);
+                margin-top: 100px;
+                right: 0;
+            }
+            .RX-last-crossing{
+                margin-top: -270px;
+            }
+            .RX-Row-Box{
+                &>div{
+                    margin-right: 5px;
+                    height: 85px;
+                    justify-content: center;
+                    width: 62px;
+                    p{
+                        height: 30px;
+                        width: 82px;
+                        line-height: 40px;
+                    }
+                    &:last-child{
+                        margin-right: 0;
+                    }
+                }
+            }
+            .RX-Column-Box{
+                right: 0px!important;
+                bottom: 50px!important;
+                &>img:nth-child(2) {
+                    transform: translateX(-45px);
+                    margin-bottom: 16px;
+                }
+                &>div:nth-child(3) {
+                    transform: translateX(-68px);
+                    margin-bottom: 16px;
+                    align-items: flex-start;
+                }
+                &>img:nth-child(4) {
+                    transform: translateX(-100px);
+                }
+            }
+            .light-box{
+                .light:nth-child(1){
+                    left: 70px;
+                    bottom: 335px;
+                    img:first-child{
+                        margin-right: 47px;
+                    }
+                }
+                .light:nth-child(2){
+                    right: 120px;
+                    bottom: 145px;
+                    flex-direction: column;
+                    img:first-child{
+                        margin-bottom: 20px;
+                    }
+                    img:last-child{
+                        transform: translateX(-55px);
+                    }
+                }
+            }
+            .element-box{
+                .element-details:nth-child(1){
+                    left: 70px;
+                    bottom: 228px;
+                    &>div{
+                        justify-content: flex-start;
+                    }
+                }
+                .element-details:nth-child(2){
+                    right: 50px;
+                    bottom: 102px;
+                    p{
+                        margin-right: 10px;
                     }
                 }
             }
@@ -747,20 +962,20 @@
                 height: 130px;
                 display: flex;
                 flex-direction: column;
-                align-items: center;
+                align-items: flex-start;
                 justify-content: center;
             }
             p{
-                font-size: 14px;
-                color: rgba(255,255,255,.61);
+                font-size: 18px;
+                color: rgba(255,255,255,.41);
                 margin-bottom: 8px;
             }
             .signalIcon{
-                width: 62px;
+                width: 50px;
                 margin-bottom: 8px;
             }
             .electricQuantity{
-                width: 70px;
+                width: 62px;
                 height: 30px;
                 background-image: url("../assets/img/cell.png");
                 background-size: 100% 100%;
@@ -785,7 +1000,7 @@
                 }
             }
             .video{
-                width: 70px;
+                width: 62px;
                 margin-bottom: 8px;
             }
         }

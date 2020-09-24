@@ -1,5 +1,5 @@
 <template>
-    <div :class="[size === 'large' ? 'crossing-items large-size' : 'crossing-items small-size', blur ? 'blur' : '']">
+    <div :class="[size === 'large' ? 'crossing-items large-size' : size === 'mini' ? 'crossing-items mini-size' : 'crossing-items small-size', blur ? 'blur' : '',big ? 'big' : '']">
         <div v-for="(item, index) in [0,1]" :class="[index === 0 ? 'first-crossing' : 'second-crossing']"/>
     </div>
 </template>
@@ -12,7 +12,8 @@
                 type: String,
                 default: 'large',       //  large/small
             },
-            blur: Boolean
+            blur: Boolean,
+            big: Boolean
         }
     }
 </script>
@@ -35,8 +36,10 @@
             }
         }
     }
-    .blur{
+    .blur div:last-child{
         background: linear-gradient(90deg, rgba(37, 66, 72, 0) 0%, #254248 27%, #254248 49%, #254248 72%, rgba(37, 66, 72, 0) 100%);
+    }
+    .big{
         div{
             &:first-child{
                 height: 210px;
@@ -50,6 +53,9 @@
         width: 590px
     }
     .small-size{
-
+        width: 400px;
+    }
+    .mini-size{
+        width: 380px;
     }
 </style>
