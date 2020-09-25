@@ -2,11 +2,11 @@
     <div class="header">
         <span class="header-left">预警系统管理平台</span>
         <div class="header-middle">
-            <div class="action">
+            <div :class="selectIndex === 0 ? 'action' : ''" @click="jump(0)">
                 <span>主页</span>
                 <div/>
             </div>
-            <div>
+            <div :class="selectIndex === 1 ? 'action' : ''" @click="jump(1)">
                 <span>预警管理</span>
                 <div/>
             </div>
@@ -19,7 +19,22 @@
 </template>
 
 <script>
-
+    export default {
+        name: 'Header',
+        data() {
+            return {
+                selectIndex: this.$route.path === '/' ? 0 : 1
+            }
+        },
+        methods: {
+            jump(index) {
+                if (index === this.selectIndex) return
+                this.selectIndex = index
+                const router = index === 0 ? '/' : '/Administer'
+                this.$router.push(router)
+            }
+        }
+    }
 </script>
 
 <style lang="scss" scoped>

@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import './color.scss'
 import './main.scss'
 import './ant.scss'
 import 'video.js/dist/video-js.css'
@@ -18,6 +19,7 @@ Vue.use(Antd)
 
 VueAMap.initAMapApiLoader({
   key: '72a33bd05c5a2def4bea81c2397a34a8',
+    plugin: ['AMap.Geocoder'],
   // plugin: ['AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType'],
   v: '1.4.4',
 });

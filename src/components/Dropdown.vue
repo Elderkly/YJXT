@@ -1,7 +1,7 @@
 <template>
     <a-dropdown :trigger="['click']" @visibleChange="_visible => visible = _visible">
         <div class='textBox'>
-            <span class="ellipsis">{{!!text ? text : '请选择'}}</span>
+            <span :class="['ellipsis',!text ? 'defaultColor' : '']">{{!!text ? text : '请选择'}}</span>
             <img v-if="!visible" src="../assets/img/right.png">
             <img v-else src="../assets/img/down.png" class="down">
         </div>
@@ -44,7 +44,7 @@
         display: flex;
         min-width: 100px;
         height: 40px;
-        background: #102D32;
+        background: $Default-Bg;
         opacity: 1;
         border-radius: 5px;
         padding: 0 16px;
@@ -52,8 +52,11 @@
         align-items: center;
         span{
             flex: 1;
-            font-size: 20px;
-            color: rgba(255,255,255,.8);
+            font-size: $Placeholder-Font-Size;
+            color: $Title-Color;
+        }
+        .defaultColor{
+            color: $Placeholder-Color;
         }
         img{
             width: 8px;

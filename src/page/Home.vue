@@ -319,6 +319,7 @@
         mounted() {
             this.initMap()
             setTimeout(() => {
+                if (this.$route.name !== 'Home') return
                 this.createChart1()
                 this.createChart2()
             },500)
@@ -622,6 +623,9 @@
                 this.playUrl = null
             }
         },
+        beforeDestroy() {
+            this.disposeVideo()
+        },
         components: {
             Box,
             ScrollView,
@@ -643,6 +647,9 @@
         .chart{
             width: 40.5%;
             margin-left: 1.5%;
+        }
+        &>div{
+            height: 85vh;
         }
     }
 

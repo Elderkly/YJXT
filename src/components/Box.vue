@@ -6,7 +6,7 @@
             <span>{{title}}</span>
             <button v-if="rightButton" @click="$emit('hidden')">
                 {{rightButton}}
-                <img src="../assets/img/right.png"/>
+                <img v-if="rightButton === '收起'" src="../assets/img/right.png"/>
             </button>
         </div>
         <div :class="hiddenFloat ? 'hiddenFloat dt-content' : 'dt-content'">
@@ -58,7 +58,7 @@
                 font-weight: bold;
             }
             button{
-                width: 96px;
+                min-width: 74px;
                 height: 40px;
                 background: rgba(24, 169, 193, 1);
                 border: none;
@@ -69,6 +69,7 @@
                 position: absolute;
                 right: 32px;
                 line-height: 40px;
+                padding: 0 16px;
                 img{
                     width: 8px;
                     transform: rotate(-90deg);
@@ -88,7 +89,8 @@
         }
         .dt-content{
             /*height: 936px;*/
-            height: 85vh;
+            /*height: 85vh;*/
+            height: 100%;
             border: 2px solid rgba(24, 169, 193, .3);
             border-top: none;
             border-radius: 15px 15px;

@@ -29,3 +29,69 @@ p{
 .map-fixedBox-scrollBox{
     height: 221px;
 }
+
+.commonButton{
+    min-width: 74px;
+    height: 40px;
+    background: rgba(24, 169, 193, 1);
+    border: none;
+    border-radius: 5px;
+    font-size: 20px;
+    box-shadow: 0px 6px 12px rgba(24, 169, 193, 0.4);
+    cursor: pointer;
+    line-height: 40px;
+    padding: 0 16px;
+    img{
+        width: 8px;
+        transform: rotate(-90deg);
+        margin-left: 3px;
+        margin-top: -5px;
+    }
+    &:focus{
+        outline:0;
+    }
+    &:hover{
+        background: rgba(24, 169, 193, .7);
+    }
+    &:active{
+        background: rgba(24, 169, 193, .2);
+    }
+}
+.amap-logo{
+    display: none;
+    opacity:0 !important;
+}
+.amap-copyright {
+    opacity:0;
+}
+.search-box{
+    .search-btn{
+        display: none!important;
+    }
+    .search-box-wrapper{
+        input{
+            border-radius: 3px;
+            border: 0;
+            background: $Default-Bg;
+            text-indent: 8px!important;
+            color: $Title-Color;
+            font-size: 13px!important;
+            outline:none;
+            height: 100%!important;
+        }
+        input::-webkit-input-placeholder{
+            color: $Placeholder-Color;
+            font-size: 13px!important;
+        }
+    }
+    .search-tips{
+        background: $Default-Bg!important;
+        border: none!important;
+    }
+    .search-tips{
+        background: $BG;
+    }
+    .autocomplete-selected{
+        background: $BG!important;
+    }
+}

@@ -30,10 +30,11 @@
 .ant-dropdown-menu{
     background-color: #102D32!important;
     margin-top: -8px!important;
+    box-shadow: none!important;
 }
 .ant-dropdown-menu-item,.ant-dropdown-menu-item > a, .ant-dropdown-menu-submenu-title > a{
     color: rgba(255,255,255,.5)!important;
-    font-size: 18px!important;
+    font-size: $Placeholder-Font-Size!important;
     padding: 10px 16px!important;
 }
 .ant-dropdown-menu-item:hover, .ant-dropdown-menu-submenu-title:hover{
