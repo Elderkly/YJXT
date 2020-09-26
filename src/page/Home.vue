@@ -680,11 +680,11 @@
         align-items: center;
         position: relative;
         .map{
-            width: 58%;
+            width: 1096px;
         }
         .chart{
-            width: 40.5%;
-            margin-left: 1.5%;
+            margin-left: 32px;
+            width: 728px;
         }
         &>div{
             height: 85vh;
@@ -803,7 +803,7 @@
         margin-top: 5%;
     }
     .details{
-        width: 58%;
+        width: 1096px;
         position: absolute!important;
     }
     .detailsBox{
