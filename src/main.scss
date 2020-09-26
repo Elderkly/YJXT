@@ -29,7 +29,15 @@ p{
 .map-fixedBox-scrollBox{
     height: 221px;
 }
-
+.serverFacilityBox{
+    height: 450px;
+}
+.serverFacilityBarClass{
+    top: 20% !important;
+}
+.displayRuleSettingsBox{
+    height: 336px;
+}
 .commonButton{
     min-width: 74px;
     height: 40px;
@@ -75,13 +83,13 @@ p{
             background: $Default-Bg;
             text-indent: 8px!important;
             color: $Title-Color;
-            font-size: 13px!important;
+            font-size: 15px!important;
             outline:none;
             height: 100%!important;
         }
         input::-webkit-input-placeholder{
             color: $Placeholder-Color;
-            font-size: 13px!important;
+            font-size: 15px!important;
         }
     }
     .search-tips{

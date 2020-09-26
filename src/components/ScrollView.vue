@@ -5,7 +5,7 @@
                 <slot/>
             </div>
         </div>
-        <div :class="!type ? 'scrollBar miniBar' : 'scrollBar'" ref="scrollBar">
+        <div :class="[!type ? 'scrollBar miniBar' : 'scrollBar',barClass ? barClass : '']" ref="scrollBar">
             <div class="thumb" ref="thumb"/>
         </div>
     </div>
@@ -14,7 +14,7 @@
 <script>
     export default {
         name: 'ScrollView',
-        props: ['boxClass','type'],
+        props: ['boxClass','type','barClass'],
         mounted() {
             //  动态计算滑块高度
             const headerHeight = 50

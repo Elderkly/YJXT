@@ -52,9 +52,41 @@
                     </div>
                 </div>
             </Box>
-            <Box title="当前连接到服务器的预警设备" class="top-right" :hiddenFloat=true />
+            <Box title="当前连接到服务器的预警设备" class="top-right">
+                <div class="right-box">
+                    <div class="placeholder"></div>
+                    <div class="header">
+                        <span>设备编号</span>
+                        <span>硬件地址</span>
+                        <span>路口编号</span>
+                        <span>查看配置</span>
+                    </div>
+                    <ScrollView boxClass="serverFacilityBox" barClass="serverFacilityBarClass">
+                        <div class="items" v-for="(item,index) in serverFacility">
+                            <span class="ellipsis">{{item.id}}</span>
+                            <span class="ellipsis">{{item.address}}</span>
+                            <span class="ellipsis">{{item.number}}</span>
+                            <span>查看</span>
+                        </div>
+                    </ScrollView>
+                </div>
+            </Box>
         </div>
-        <Box title="显示规则设置" class="A-bottom" :hiddenFloat=true />
+        <Box title="显示规则设置" class="A-bottom">
+            <div class="A-bottom-box">
+                <div class="B-left">
+                    <Dropdown :data="displayRuleSettings.targetList" v-model="displayRuleSettings.target"/>
+                </div>
+                <ScrollView class="B-right" boxClass="displayRuleSettingsBox">
+                    <div class="placeholder"></div>
+                    <div class="B-right-items-box">
+                        <div class="B-right-items ellipsis" v-for="(item,index) in displayRuleSettings.ruleList">
+                            {{item}}
+                        </div>
+                    </div>
+                </ScrollView>
+            </div>
+        </Box>
     </div>
 </template>
 
@@ -62,12 +94,14 @@
     import Box from '../components/Box'
     import Input from '../components/Input'
     import Dropdown from '../components/Dropdown'
+    import ScrollView from '../components/ScrollView'
     export default {
         name: 'Administer',
         components: {
             Box,
             Input,
-            Dropdown
+            Dropdown,
+            ScrollView
         },
         data() {
             const self = this;
@@ -79,6 +113,55 @@
                     number: null,       //  编号
                     element: null,      //  单元个数
                     shape: null         //  路口形状
+                },
+                //  连接到服务器的预警设备
+                serverFacility: [
+                    {
+                        id: 1,
+                        address: 'b8-27-eb-7e-6a-36',
+                        number: 'yunnan-101',
+                        config: {
+                            list: [12,2,3,4]
+                        }
+                    },
+                    {
+                        id: 2,
+                        address: 'b8-27-eb-7e-6a-36',
+                        number: 'yunnan-102',
+                        config: {
+                            list: [12,2,3,4]
+                        }
+                    },
+                    {
+                        id: 2,
+                        address: 'b8-27-eb-7e-6a-36',
+                        number: 'yunnan-102',
+                        config: {
+                            list: [12,2,3,4]
+                        }
+                    },
+                    {
+                        id: 2,
+                        address: 'b8-27-eb-7e-6a-36',
+                        number: 'yunnan-102',
+                        config: {
+                            list: [12,2,3,4]
+                        }
+                    },
+                    {
+                        id: 2,
+                        address: 'b8-27-eb-7e-6a-36',
+                        number: 'yunnan-102',
+                        config: {
+                            list: [12,2,3,4]
+                        }
+                    },
+                ],
+                //  显示规则设置
+                displayRuleSettings: {
+                    target: null,
+                    targetList: ['单元1','单元2','单元3'],
+                    ruleList: ['主路来车，停车让行','左侧来车，减速慢行','右侧来车，减速慢行','两侧来车减速慢性','减速慢行，主路优先','主路来车，注意避让','减速慢行','备用','夜间模式','白天模式','停止显示','显示逻辑1','显示逻辑2','显示逻辑3','显示逻辑3','显示逻辑3','显示逻辑3','显示逻辑3','显示逻辑3','显示逻辑3','显示逻辑3','显示逻辑3']
                 },
                 center: [114.06055,22.540582],
                 address: {
@@ -258,4 +341,78 @@
             left: -20px;
         }
     }
+    .right-box{
+        padding: 0 22px;
+        .placeholder{
+            height: 82px;
+        }
+        .header{
+            display: flex;
+            margin-bottom: 18px;
+            span{
+                flex: .8;
+                text-align: center;
+                font-size: 20px;
+                color: $Title-Color;
+                &:nth-child(2) {
+                    flex: 1;
+                }
+            }
+        }
+        .items{
+            display: flex;
+            span{
+                flex: .8;
+                text-align: center;
+                font-size: 18px;
+                color: $Title-Color;
+                &:nth-child(2) {
+                    flex: 1;
+                }
+                &:last-child{
+                    color: rgba(24, 169, 193, .9);
+                    font-weight: bold;
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+    .A-bottom-box{
+        padding: 0 32px;
+        display: flex;
+        .B-left{
+            margin-top: 116px;
+            width: 196px;
+            margin-right: 32px;
+        }
+        .B-right{
+            flex: 1;
+            .placeholder{
+                height: 116px;
+            }
+            .B-right-items-box{
+                display: flex;
+                flex-wrap: wrap;
+                .B-right-items{
+                    width: 196px;
+                    height: 40px;
+                    background: $Default-Bg;
+                    padding: 0 17px;
+                    box-sizing: border-box;
+                    border-radius: 5px;
+                    font-size: 18px;
+                    color: $Title-Color;
+                    margin-right: 32px;
+                    margin-bottom: 48px;
+                    text-align: center;
+                    line-height: 40px;
+                    cursor: pointer;
+                    &:nth-child(7n) {
+                        margin-right: 0;
+                    }
+                }
+            }
+        }
+    }
+
 </style>
