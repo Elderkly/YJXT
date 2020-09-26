@@ -418,7 +418,7 @@
                 const chart = new Chart({
                     container: 'c1',
                     autoFit: true,
-                    height: windowWidth * 0.11,
+                    height: windowWidth * 0.13,
                 });
                 chart.data(this.list1);
                 chart.scale('percent', {
@@ -439,7 +439,25 @@
                 chart.legend(false);
 
                 chart
-                    .interval()
+                    .interval({
+                        theme: {
+                            background: "#000",
+                            geometries: {           //  投影
+                                interval: {
+                                    rect: {
+                                        default: {
+                                            style: {
+                                                lineWidth: 0,
+                                                shadowBlur: 20,
+                                                shadowOffsetY: 15,
+                                                shadowColor: "rgba(24, 169, 193, .4)"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    })
                     .adjust('stack')
                     .position('percent')
                     .color('item',['#4da6bf','#ed6046'])
@@ -510,6 +528,7 @@
             },
             //  折线图
             createChart2() {
+                const self = this
                 const windowWidth = document.documentElement.clientWidth
                 // Step 1: 创建 Chart 对象
                 const chart = new Chart({
@@ -542,6 +561,9 @@
                 //  辅助线
                 chart.tooltip({
                     showTitle: false,   //  是否显示标题
+                    // marker: {        //  配置鼠标移入时的圆点
+                    //     r: 1
+                    // },
                     itemTpl: `<div class="tooltip">
                         <img src='https://alipic.lanhuapp.com/xd5f119bbd-a2db-4d5d-a40d-2f02216ea1f5'/>
                         <span>{temperature}</span>
@@ -557,19 +579,35 @@
                     .position('month*temperature')
                     .color('city',['#ed6046', '#4da6bf'])
                     .shape('smooth')
-                    .size(6)
-                    .tooltip('temperature', (temperature, value) => {
+                    .size(5)
+                    .style({
+                        lineCap: 'round',
+                        position: 'right',
+                        showCrosshairs: false,
+                    })
+                    .tooltip('temperature*month', (temperature, month) => {
                         return {
                             temperature,
+                            month,
                         };
                     })
+
                 //  点
                 chart
                     .point()
                     .position('month*temperature')
                     .color('city',['#ed6046', '#4da6bf'])
                     .shape('circle')
-                    .size(5)
+                    .style({
+                        fields: [ 'month', 'temperature' ], // 数据字段
+                        callback: (xVal, yVal) => {
+                            if (xVal === self.list2[0].month || xVal === self.list2[self.list2.length - 1].month) {
+                                return {r: 0}
+                            }
+                            return {strokeOpacity: 0}
+                        }
+                    })
+                    .size(4.5)
                     .tooltip('temperature', (temperature, value) => {
                         return {
                             temperature
