@@ -550,13 +550,28 @@
                     },
                 });
                 //  刻度线
-                chart.axis('month', {tickLine: false})
-                chart.axis('temperature', {grid: null,line: {
+                chart.axis('month', {tickLine: false,label:{
+                    autoEllipsis: true,
+                    style: {
+                        fill: 'rgba(255, 255, 255, 0.8)',
+                    }
+                }})
+                chart.axis('temperature', {
+                    grid: null,
+                    line: {
                         style: {
                             lineWidth: 0.5,
                             stroke: '#BFBFBF',
                         },
-                    },})
+                    },
+                    label: {
+                        autoEllipsis: true,
+                        style: {
+                            // x: 0,
+                            fill: 'rgba(255, 255, 255, 0.8)',
+                        }
+                    }
+                })
 
                 //  辅助线
                 chart.tooltip({
