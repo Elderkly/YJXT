@@ -79,7 +79,7 @@
                 color: #fff;
                 font-weight: bold;
                 div{
-                    background: #18A9C1;
+                    background: rgba(86, 165, 255, 1);
                     display: block;
                 }
             }

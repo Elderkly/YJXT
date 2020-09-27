@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="A-top">
-            <Box title="预警参数配置" class="top-left" rightButton="保存参数设置" :hiddenFloat=true>
+            <Box title="预警参数配置" class="top-left" rightButton="保存参数设置" :hiddenFloat=true :bottomBackgroundSize="2">
                 <div class="top-box">
                     <div class="TB-left">
                         <div class="items">
@@ -17,14 +17,14 @@
                             <Dropdown :data="['十字路口','T形路口','人形路口']" v-model="submitConfig.shape"/>
                         </div>
                         <div class="fixed-map-box" v-if="openMap" ref="fixedBox">
-                            <Box class="fixed-map" title="坐标选点" right-button="确定" @hidden="hiddenMap">
+                            <Box class="fixed-map" title="坐标选点" right-button="确定" @hidden="hiddenMap" :headerBlur="true">
                                 <el-amap-search-box class="search-box" :searchOption="{citylimit: false}" :on-search-result="onSearchResult"></el-amap-search-box>
                                 <el-amap
                                     vid="amapDemo"
                                     :zoom="13"
                                     :center="center"
                                     class="amap-demo"
-                                    mapStyle="amap://styles/f766b09906abc805318e0c0e0f16a48f"
+                                    mapStyle="amap://styles/972a61b58d5599688686f405ac78c956"
                                     :events="events"
                                 >
                                     <el-amap-marker :position="center" >
@@ -51,8 +51,8 @@
                         </div>
                     </div>
                 </div>
-            </Box>
-            <Box title="当前连接到服务器的预警设备" class="top-right">
+            </Box >
+            <Box title="当前连接到服务器的预警设备" class="top-right" :bottomBackgroundSize="1">
                 <div class="right-box">
                     <div class="placeholder"></div>
                     <div class="header">
@@ -72,7 +72,7 @@
                 </div>
             </Box>
         </div>
-        <Box title="显示规则设置" class="A-bottom">
+        <Box title="显示规则设置" class="A-bottom" :bottomBackgroundSize="3" :hiddenFloat="true">
             <div class="A-bottom-box">
                 <div class="B-left">
                     <Dropdown :data="displayRuleSettings.targetList" v-model="displayRuleSettings.target"/>
@@ -317,8 +317,8 @@
             height: 50px;
             background: $BG;
             line-height: 50px;
-            backdrop-filter: blur(20px) brightness(0.5);
-            border-top: 2px solid rgba(24, 169, 193, .3);
+            backdrop-filter: blur(20px);
+            border-top: 2px solid $Border-Color;
             display: flex;
             justify-content: flex-end;
             padding: 0 15px;
@@ -370,7 +370,7 @@
                     flex: 1;
                 }
                 &:last-child{
-                    color: rgba(24, 169, 193, .9);
+                    color: rgba(0, 119, 255, 1);
                     font-weight: bold;
                     cursor: pointer;
                 }
@@ -381,14 +381,14 @@
         padding: 0 32px;
         display: flex;
         .B-left{
-            margin-top: 116px;
+            margin-top: 56px;
             width: 196px;
             margin-right: 32px;
         }
         .B-right{
             flex: 1;
             .placeholder{
-                height: 116px;
+                height: 56px;
             }
             .B-right-items-box{
                 display: flex;

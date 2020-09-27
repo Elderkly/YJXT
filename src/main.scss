@@ -1,7 +1,7 @@
 html,body{
     padding: 0;
     margin: 0;
-    background: #000!important;
+    background: linear-gradient(180deg, #112565 0%, #0E3BCF 100%)!important;
 }
 p{
     margin: 0;
@@ -41,11 +41,11 @@ p{
 .commonButton{
     min-width: 74px;
     height: 40px;
-    background: rgba(24, 169, 193, 1);
+    background: $Button-Color;
     border: none;
     border-radius: 5px;
     font-size: 20px;
-    box-shadow: 0px 6px 12px rgba(24, 169, 193, 0.4);
+    box-shadow: 0px 6px 12px $Button-Shadow-Color;
     cursor: pointer;
     line-height: 40px;
     padding: 0 16px;
@@ -59,10 +59,10 @@ p{
         outline:0;
     }
     &:hover{
-        background: rgba(24, 169, 193, .7);
+        background: $Button-Hover-Color;
     }
     &:active{
-        background: rgba(24, 169, 193, .2);
+        background: $Button-Action-Color;
     }
 }
 .amap-logo{
@@ -102,4 +102,7 @@ p{
     .autocomplete-selected{
         background: $BG!important;
     }
+}
+.detailsContent{
+    background: linear-gradient(180deg, #112565 0%, #0d38a7 100%) !important;
 }

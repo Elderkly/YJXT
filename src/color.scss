@@ -1,10 +1,19 @@
 //  背景色
-$BG: rgba(24,169,193,.15);
+$BG: rgba(86, 165, 255, .15);
+//  模糊
+$Backdrop-Filter: blur(20px) brightness(0.65);
 //  区块颜色
-$Default-Bg: rgba(16, 45, 50, 1);
+$Default-Bg: rgba(11, 63, 152, 1);
+//  边框颜色
+$Border-Color: rgba(86, 165, 255, 1);
 //  标题
 $Title-Color: rgba(255,255,255,.5);
 $Title-Font-Size: 18px;
 //  占位符
-$Placeholder-Color:  rgba(255,255,255,.2);
+$Placeholder-Color:  rgba(255,255,255,.3);
 $Placeholder-Font-Size: 20px;
+//  button
+$Button-Color: rgba(0, 119, 255, 1);
+$Button-Shadow-Color: rgba(86, 165, 255, 0.4);
+$Button-Hover-Color: rgba(0, 119, 255, .7);
+$Button-Action-Color: rgba(0, 119, 255, .4);

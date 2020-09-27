@@ -24,7 +24,7 @@
         align-items: center;
         justify-content: center;
         div{
-            background: linear-gradient(90deg, rgba(37, 66, 72, 0) 0%, rgba(37, 66, 72, 0.8) 52%, rgba(37, 66, 72, 0) 100%);
+            background: linear-gradient(90deg, rgba(0, 119, 255, 0) 0%, #0077FF 51%, rgba(0, 119, 255, 0) 100%);;
             &:first-child{
                 height: 178px;
                 width: 100%;
@@ -37,7 +37,7 @@
         }
     }
     .blur div:last-child{
-        background: linear-gradient(90deg, rgba(37, 66, 72, 0) 0%, #254248 27%, #254248 49%, #254248 72%, rgba(37, 66, 72, 0) 100%);
+        background: linear-gradient(90deg, rgba(0, 119, 255, 0) 0%, #0077FF 27%, #0077FF 49%, #0077FF 71%, rgba(0, 119, 255, 0) 100%);
     }
     .big{
         div{

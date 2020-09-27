@@ -1,7 +1,7 @@
 <template>
     <div @click="visible = true" class="calendarBox" ref="calendarBox">
         <div class='textBox'>
-            <span class="ellipsis">{{!!text ? text : '请选择'}}</span>
+            <span :class="['ellipsis',!text ? 'defaultColor' : '']">{{!!text ? text : '请选择'}}</span>
             <img src="../assets/img/calendar.png" class="calendar">
         </div>
         <a-date-picker :allowClear="false" :locale="locale" :style="{position:'absolute',left:0,opacity:visible ? 1 : 0,zIndex:visible ? 10 : -1}" class="data-picker" :open="visible" @change="panelChange"/>
@@ -63,7 +63,7 @@
         display: flex;
         min-width: 100px;
         height: 40px;
-        background: #102D32;
+        background: $Default-Bg;
         opacity: 1;
         border-radius: 5px;
         padding: 0 16px;
@@ -73,7 +73,7 @@
         span{
             flex: 1;
             font-size: 20px;
-            color: rgba(255,255,255,.8);
+            color: $Title-Color;
         }
         .calendar{
             width: 18px;
@@ -82,6 +82,9 @@
     .calendarBox{
         position: relative;
         padding: 0!important;
+    }
+    .defaultColor{
+        color: $Placeholder-Color!important;
     }
     /*@media screen and (max-width: 1650px){*/
     /*    .textBox{*/

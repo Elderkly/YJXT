@@ -3,10 +3,10 @@
     padding: 16px 24px;
     box-sizing: border-box;
     backdrop-filter: saturate(180%) blur(20px);
-    border: 1px solid rgba(24, 169, 193, .3);
+    border: 1px solid $Border-Color;
     background: rgba(55, 55, 55, 0.5);
     border-radius: 15px;
-    color: rgba(255,255,255,.6);
+    color: $Title-Color;
     font-size: 16px;
     p{
         margin-bottom: 5px;
@@ -20,7 +20,7 @@
     p:last-child{
         text-align: center;
         cursor: pointer;
-        color: #18A9C1;
+        color: rgba(0, 119, 255, 1);
         font-size: 20px;
         font-weight: bold;
         margin-top: 5px;
@@ -28,7 +28,7 @@
     }
 }
 .ant-dropdown-menu{
-    background-color: #102D32!important;
+    background-color: $Default-Bg!important;
     margin-top: -8px!important;
     box-shadow: none!important;
 }
@@ -38,14 +38,21 @@
     padding: 10px 16px!important;
 }
 .ant-dropdown-menu-item:hover, .ant-dropdown-menu-submenu-title:hover{
-    background: #275663!important;
+    background: $BG!important;
+}
+.ant-calendar-picker{
+    opacity: 0!important;
 }
 .ant-calendar-input-wrap{
     display: none!important;
 }
 .ant-calendar{
-    background-color: #0b2227!important;
+    background-color: $Default-Bg!important;
     border: none!important;
+    width: 196px!important;
+    margin-top: 35px;
+    border-radius: 0 0 12px 12px!important;
+    box-shadow: none!important;
     *{
         color: rgba(255,255,255,.8)!important;
     }
@@ -57,13 +64,13 @@
     border-top: 1px solid rgba(24, 169, 193, .3) !important;
 }
 .ant-calendar-today-btn {
-    color: #1890ff!important;
+    color: rgba(0, 119, 255, 1)!important;
 }
 .ant-calendar-selected-day .ant-calendar-date{
-    background: #18A9C1!important;
+    background: rgba(0, 119, 255, 1)!important;
 }
 .ant-calendar-date:hover{
-    background: rgba(24, 169, 193, .3) !important;;
+    background: rgba(86, 165, 255, 1)!important;;
 }
 .ant-calendar-ym-select a{
     pointer-events:none

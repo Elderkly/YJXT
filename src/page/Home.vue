@@ -1,12 +1,12 @@
 <template>
     <div class="home">
-        <Box :icon="require('../assets/img/icon-map.png')" title="地图概览" class="map">
+        <Box :icon="require('../assets/img/icon-map.png')" title="地图概览" class="map" :headerBlur="true">
             <el-amap
                 vid="amapDemo"
                 :center="center"
                 :zoom="zoom"
                 class="amap-demo"
-                mapStyle="amap://styles/f766b09906abc805318e0c0e0f16a48f"
+                mapStyle="amap://styles/972a61b58d5599688686f405ac78c956"
                 :zooms="[3,16]"
             >
                 <el-amap-marker v-for="(marker,index) in markers" :key="index" :position="marker.position" :events="marker.events">
@@ -63,7 +63,7 @@
                 <div id="c2"></div>
             </div>
         </Box>
-        <Box title="车辆检测实时监控" class="details" :hiddenFloat=true rightButton="收起" @hidden="Details = null" v-if="Details">
+        <Box title="车辆检测实时监控" class="details" :hiddenFloat=true rightButton="收起" @hidden="Details = null" v-if="Details" contentClass="detailsContent">
             <div class="detailsBox">
                 <div class="details-left">
                     <p>当前路口编号</p>
@@ -83,7 +83,7 @@
                                    <div>
                                        <img :src="item.signalIcon" class="signalIcon"/>
                                        <div class="electricQuantity">
-                                           <div :style="{width: item.electricQuantity > 78 ? '78%' : item.electricQuantity + '%', background: item.electricQuantity > 50 ? '#18A9C1' : item.electricQuantity > 20 ? '#C18E18' : '#C18E18',position: 'absolute',height:'78%'}"/>
+                                           <div :style="{width: item.electricQuantity > 78 ? '78%' : item.electricQuantity + '%', background: item.electricQuantity > 50 ? 'rgba(0, 119, 255, 1)' : item.electricQuantity > 20 ? 'rgba(193, 142, 24, 1)' : 'rgba(255, 79, 64, 1)',position: 'absolute',height:'78%'}"/>
                                            <span>{{item.electricQuantity}}%</span>
                                        </div>
                                        <img src="../assets/img/video.png" class="video" v-if="item.video" @click="openVideo(item)"/>
@@ -106,7 +106,7 @@
                                     <div>
                                         <img :src="item.signalIcon" class="signalIcon"/>
                                         <div class="electricQuantity">
-                                            <div :style="{width: item.electricQuantity > 78 ? '78%' : item.electricQuantity + '%', background: item.electricQuantity > 50 ? '#18A9C1' : item.electricQuantity > 20 ? '#C18E18' : '#C18E18',position: 'absolute',height:'78%'}"/>
+                                            <div :style="{width: item.electricQuantity > 78 ? '78%' : item.electricQuantity + '%', background: item.electricQuantity > 50 ? 'rgba(0, 119, 255, 1)' : item.electricQuantity > 20 ? 'rgba(193, 142, 24, 1)' : 'rgba(255, 79, 64, 1)',position: 'absolute',height:'78%'}"/>
                                             <span>{{item.electricQuantity}}%</span>
                                         </div>
                                         <img src="../assets/img/video.png" class="video" v-if="item.video"/>
@@ -116,7 +116,7 @@
                                     <div>
                                         <p>{{item.name}}</p>
                                         <div class="electricQuantity">
-                                            <div :style="{width: item.electricQuantity > 78 ? '78%' : item.electricQuantity + '%', background: item.electricQuantity > 50 ? '#18A9C1' : item.electricQuantity > 20 ? '#C18E18' : '#C18E18',position: 'absolute',height:'78%'}"/>
+                                            <div :style="{width: item.electricQuantity > 78 ? '78%' : item.electricQuantity + '%', background: item.electricQuantity > 50 ? 'rgba(0, 119, 255, 1)' : item.electricQuantity > 20 ? 'rgba(193, 142, 24, 1)' : 'rgba(255, 79, 64, 1)',position: 'absolute',height:'78%'}"/>
                                             <span>{{item.electricQuantity}}%</span>
                                         </div>
                                     </div>
@@ -269,7 +269,7 @@
                 // Details: {
                 //     action: 'yuannan-01',
                 //     list: ['yuannan-01','yunan-02','yunan-03'],
-                //     type: 'crossroad',        //  路口类型  十字 crossroad     T形 TCrossing      人形 PCrossing
+                //     type: 'PCrossing',        //  路口类型  十字 crossroad     T形 TCrossing      人形 PCrossing
                 //     element: [
                 //         {
                 //             name: '主单元',            //  单元名称
@@ -287,22 +287,22 @@
                 //             passStatus: [false, false],//  车辆经过状态 对应每一个灯
                 //             video: '123',                //  录像
                 //         },
-                //         // {
-                //         //     name: '二号单元',            //  单元名称
-                //         //     signal: 1,                //  信号强度
-                //         //     signalIcon: require('../assets/img/signal-1.png'),//    信号图片
-                //         //     electricQuantity: 10,     //  电量
-                //         //     passStatus: [false, false],//  车辆经过状态 对应每一个灯
-                //         //     video: '123',                //  录像
-                //         // },
-                //         // {
-                //         //     name: '三号单元',            //  单元名称
-                //         //     signal: 3,                //  信号强度
-                //         //     signalIcon: require('../assets/img/signal-3.png'),//    信号图片
-                //         //     electricQuantity: 60,     //  电量
-                //         //     passStatus: [false, false],//  车辆经过状态 对应每一个灯
-                //         //     video: '123',                //  录像
-                //         // },
+                //         {
+                //             name: '二号单元',            //  单元名称
+                //             signal: 1,                //  信号强度
+                //             signalIcon: require('../assets/img/signal-1.png'),//    信号图片
+                //             electricQuantity: 10,     //  电量
+                //             passStatus: [false, false],//  车辆经过状态 对应每一个灯
+                //             video: '123',                //  录像
+                //         },
+                //         {
+                //             name: '三号单元',            //  单元名称
+                //             signal: 3,                //  信号强度
+                //             signalIcon: require('../assets/img/signal-3.png'),//    信号图片
+                //             electricQuantity: 60,     //  电量
+                //             passStatus: [false, false],//  车辆经过状态 对应每一个灯
+                //             video: '123',                //  录像
+                //         },
                 //     ]
                 // },
                 playUrl: ''
@@ -450,7 +450,7 @@
                                                 lineWidth: 0,
                                                 shadowBlur: 20,
                                                 shadowOffsetY: 15,
-                                                shadowColor: "rgba(24, 169, 193, .4)"
+                                                shadowColor: "rgba(86, 165, 255, .4)"
                                             }
                                         }
                                     }
@@ -460,7 +460,7 @@
                     })
                     .adjust('stack')
                     .position('percent')
-                    .color('item',['#4da6bf','#ed6046'])
+                    .color('item',['rgba(0, 119, 255, 1)','rgba(255, 79, 64, 1)'])
                     // .label('percent', (percent) => {
                     //     return {
                     //         content: (data) => {
@@ -577,7 +577,7 @@
                 chart
                     .line()
                     .position('month*temperature')
-                    .color('city',['#ed6046', '#4da6bf'])
+                    .color('city',['rgba(0, 119, 255, 1)','rgba(255, 79, 64, 1)'])
                     .shape('smooth')
                     .size(5)
                     .style({
@@ -596,7 +596,7 @@
                 chart
                     .point()
                     .position('month*temperature')
-                    .color('city',['#ed6046', '#4da6bf'])
+                    .color('city',['rgba(0, 119, 255, 1)','rgba(255, 79, 64, 1)'])
                     .shape('circle')
                     .style({
                         fields: [ 'month', 'temperature' ], // 数据字段
@@ -709,7 +709,7 @@
                     display: flex;
                     min-width: 100px;
                     height: 40px;
-                    background: #102D32;
+                    /*background: #102D32;*/
                     opacity: 1;
                     border-radius: 5px;
                     padding: 0 16px;
@@ -734,28 +734,28 @@
                 height: 2px;
                 border-radius: 4px;
                 left: 33%;
-                top: 212px;
+                top: 152px;
                 background: rgba(255,255,255,.8);;
             }
             button{
                 width: 100%;
                 height: 40px;
-                background: rgba(24, 169, 193, 1);
+                background: $Button-Color;
                 border: none;
                 border-radius: 5px;
                 font-size: 18px;
                 font-weight: bold;
-                box-shadow: 0px 6px 12px rgba(24, 169, 193, 0.4);
+                box-shadow: 0px 6px 12px $Button-Shadow-Color;
                 cursor: pointer;
             }
             button:focus{
                 outline:0;
             }
             button:hover{
-                background: rgba(24, 169, 193, .7);
+                background: $Button-Hover-Color;
             }
             button:active{
-                background: rgba(24, 169, 193, .2);
+                background: $Button-Action-Color;
             }
         }
     }
@@ -768,13 +768,13 @@
         text-align: center;
         border-radius: 15px;
         overflow: hidden;
-        border: 1px solid rgba(24, 169, 193, .3);
+        border: 1px solid $Border-Color;
         box-sizing: border-box;
         .map-fixedBox-header{
             height: 50px;
-            background: rgba(255,255,255,.13);
-            backdrop-filter: saturate(180%) blur(20px);
-            border-bottom: 1px solid rgba(24, 169, 193, .3);
+            background: $BG;
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid $Border-Color;
             box-sizing: border-box;
             font-size: 24px;
             font-weight: bold;
@@ -782,15 +782,18 @@
             position: absolute;
             width: 100%;
             z-index: 10;
+            border-radius: 15px 15px 0 0;
         }
         .map-fixedBox-content{
             padding: 0 22px;
-            background: #161f23;
+            background: $BG;
+            backdrop-filter: $Backdrop-Filter;
+            border-radius: 22px;
             div{
                 height: 50px;
                 font-size: 20px;
                 color: rgba(255,255,255,.6);
-                border-bottom: 1px solid rgba(24, 169, 193, .3);
+                border-bottom: 1px solid $Border-Color;
                 line-height: 50px;
                 cursor: pointer;
                 &:first-child{
@@ -813,7 +816,7 @@
             width: calc(100% - 380px);
             &>p{
                 font-size: 18px;
-                color: rgba(255,255,255,.5);
+                color: $Title-Color;
                 margin-bottom: 9px;
             }
             .Dropdown{
@@ -825,17 +828,19 @@
             position: relative;
         }
         .middle-box{
-            /*height: 390px;*/
             margin-bottom: 5%;
+            border: 2px solid $Border-Color;
+            border-radius: 15px;
+            box-sizing: border-box;
+            position: relative;
             .middle-box-header{
-                width: 100%;
+                width: calc(100% - 3px);
                 height: 50px;
                 text-align: center;
                 line-height: 50px;
-                background: rgba(24, 169, 193, .15);
-                backdrop-filter: blur(15px) ;
+                backdrop-filter: blur(15px);
                 border-radius: 15px 15px 0 0;
-                border-bottom: 2px solid rgba(24, 169, 193, .3);
+                border-bottom: 2px solid $Border-Color;
                 box-sizing: border-box;
                 position: absolute;
                 z-index: 10;
@@ -845,18 +850,15 @@
             }
             .middle-box-content{
                 height: 100%;
-                border: 2px solid rgba(24, 169, 193, .3);
                 border-top: none;
                 border-radius: 15px 15px;
                 overflow: hidden;
-                backdrop-filter: saturate(60%) blur(20px) brightness(0.5);
-                background: #131c20;
-                /*background-image: url("../assets/img/box-bg.png");*/
+                /*backdrop-filter: blur(15px) brightness(0.1);*/
                 background-size: 100% 100%;
                 p{
                     padding: 0 20px;
                     font-size: 18px;
-                    color: rgba(255,255,255,.5);
+                    color: rgba(255,255,255,.6);
                     line-height: 24px;
                 }
                 div{
@@ -893,7 +895,7 @@
                     }
                 }
                 .light:nth-child(2){
-                    right: 210px;
+                    right: 220px;
                     bottom: 75px;
                     flex-direction: column;
                     img:first-child{
@@ -902,13 +904,13 @@
                 }
                 .light:nth-child(3){
                     right: 55px;
-                    top: 220px;
+                    top: 225px;
                     img:first-child{
                         margin-right: 47px;
                     }
                 }
                 .light:nth-child(4){
-                    left: 210px;
+                    left: 220px;
                     top: 75px;
                     flex-direction: column;
                     img:first-child{
@@ -973,7 +975,7 @@
             }
             .light-box{
                 .light:nth-child(1){
-                    right: 210px;
+                    right: 220px;
                     bottom: 115px;
                     flex-direction: column;
                     img:first-child{
@@ -1023,7 +1025,7 @@
             .RX-first-crossing{
                 position: absolute;
                 transform: rotate(130deg);
-                margin-top: 100px;
+                margin-top: 80px;
                 right: 0;
             }
             .RX-last-crossing{
@@ -1064,7 +1066,7 @@
             .light-box{
                 .light:nth-child(1){
                     left: 70px;
-                    bottom: 335px;
+                    bottom: 340px;
                     img:first-child{
                         margin-right: 47px;
                     }

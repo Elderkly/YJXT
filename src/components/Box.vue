@@ -1,6 +1,6 @@
 <template>
     <div class="dt-box">
-        <div class="dt-header">
+        <div :class="['dt-header',headerBlur ? 'headerBlur' : '']">
             <img src="../assets/img/biling.png"/>
             <img :src="icon" v-if="icon">
             <span>{{title}}</span>
@@ -9,8 +9,11 @@
                 <img v-if="rightButton === '收起'" src="../assets/img/right.png"/>
             </button>
         </div>
-        <div :class="hiddenFloat ? 'hiddenFloat dt-content' : 'dt-content'">
-            <slot/>
+        <div :class="[hiddenFloat ? 'hiddenFloat dt-content' : 'dt-content',contentClass ? contentClass : '']">
+            <div class="contentBox">
+                <slot/>
+            </div>
+            <div :style="{backgroundImage: 'url('+ bottomBackground +')'}" class="bottom-biling"/>
         </div>
     </div>
 </template>
@@ -22,7 +25,21 @@
             icon: String,
             title: String,
             hiddenFloat: Boolean,
-            rightButton: String
+            rightButton: String,
+            contentClass: String,
+            bottomBackgroundSize: {
+                type: Number,
+                default: 2
+            },
+            headerBlur: {
+                type: Boolean,
+                deafult: false
+            }
+        },
+        computed: {
+            bottomBackground() {
+                return this.bottomBackgroundSize === 1 ? require('../assets/img/bottom-biling-1.png') : this.bottomBackgroundSize === 2 ? require('../assets/img/bottom-biling-2.png') : require('../assets/img/bottom-biling-3.png')
+            }
         }
     }
 </script>
@@ -30,19 +47,21 @@
 <style lang="scss" scoped>
     .dt-box{
         position: relative;
+        background: $BG;
+        backdrop-filter: $Backdrop-Filter;
         .dt-header{
             width: 100%;
             height: 60px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(24, 169, 193, .15);
-            backdrop-filter: blur(20px) brightness(0.5);
+            //background: $BG;
+            //backdrop-filter: blur(20px) brightness(0.9);
             border-radius: 15px 15px 0 0;
-            border: 2px solid rgba(24, 169, 193, .3);
+            border: 2px solid $Border-Color;
             box-sizing: border-box;
             position: absolute;
-            z-index: 10;
+            z-index: 15;
             &>img:nth-child(1){
                 width: 56%;
                 height: 80%;
@@ -60,11 +79,11 @@
             button{
                 min-width: 74px;
                 height: 40px;
-                background: rgba(24, 169, 193, 1);
+                background: $Button-Color;
                 border: none;
                 border-radius: 5px;
                 font-size: 20px;
-                box-shadow: 0px 6px 12px rgba(24, 169, 193, 0.4);
+                box-shadow: 0px 6px 12px $Button-Shadow-Color;
                 cursor: pointer;
                 position: absolute;
                 right: 32px;
@@ -81,28 +100,43 @@
                 outline:0;
             }
             button:hover{
-                background: rgba(24, 169, 193, .7);
+                background: $Button-Hover-Color;
             }
             button:active{
-                background: rgba(24, 169, 193, .2);
+                background: $Button-Action-Color;
             }
         }
         .dt-content{
-            /*height: 936px;*/
-            /*height: 85vh;*/
             height: 100%;
-            border: 2px solid rgba(24, 169, 193, .3);
+            border: 2px solid $Border-Color;
             border-top: none;
             border-radius: 15px 15px;
             overflow: hidden;
-            backdrop-filter: saturate(60%) blur(20px) brightness(0.5);
-            background: rgba(24, 169, 193, .15);
-            /*background-image: url("../assets/img/box-bg.png");*/
-            background-size: 100% 100%;
+            //background: $BG;
+            //backdrop-filter: $Backdrop-Filter;
         }
         .hiddenFloat{
             padding-top: 60px;
             box-sizing: border-box;
         }
+    }
+    .contentBox{
+        position: relative;
+        z-index: 10;
+        height: 100%;
+    }
+    .bottom-biling{
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 70px;
+        /*z-index: 5;*/
+        background-size: 100%;
+        background-position: bottom;
+        background-repeat: no-repeat;
+    }
+    .headerBlur{
+        background: $BG;
+        backdrop-filter: $Backdrop-Filter;
     }
 </style>
