@@ -28,7 +28,7 @@
                 </ScrollView>
             </div>
         </Box>
-        <Box :icon="require('../assets/img/icon-chart.png')" title="数据分析图" class="chart" :hiddenFloat=true>
+        <Box :icon="require('../assets/img/icon-chart.png')" title="数据分析图" class="chart" :hiddenFloat=true boxClass="chartBigBox">
             <div class="chartBox">
                 <div>
                     <div class="chartItemBox">

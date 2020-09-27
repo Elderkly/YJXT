@@ -1,5 +1,5 @@
 <template>
-    <div class="dt-box">
+    <div :class="['dt-box',boxClass ? boxClass : '']">
         <div :class="['dt-header',headerBlur ? 'headerBlur' : '']">
             <img src="../assets/img/biling.png"/>
             <img :src="icon" v-if="icon">
@@ -27,6 +27,7 @@
             hiddenFloat: Boolean,
             rightButton: String,
             contentClass: String,
+            boxClass: String,
             bottomBackgroundSize: {
                 type: Number,
                 default: 2
