@@ -307,9 +307,9 @@
     }
     .fixed-map{
         width: 640px;
-        height: 412px;
+        height: 40vh;
         border-radius: 15px;
-        margin-top: 50px;
+        margin-top: 1vh;
         .mapText{
             position: absolute;
             bottom: 0;
