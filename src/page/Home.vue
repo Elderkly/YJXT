@@ -18,13 +18,7 @@
                 <div class="map-fixedBox-header">路口列表</div>
                 <ScrollView class="map-fixedBox-content" boxClass="map-fixedBox-scrollBox">
                     <div></div>
-                    <div class="ellipsis">路口1123123112312323</div>
-                    <div>路口2</div>
-                    <div>路口3</div>
-                    <div>路口4</div>
-                    <div>路口5</div>
-                    <div>路口6</div>
-                    <div>路口7</div>
+                    <div class="ellipsis" v-for="item in crossing" @click="center = [item[2],item[3]]">{{item[0]}}}</div>
                 </ScrollView>
             </div>
         </Box>
@@ -33,15 +27,15 @@
                 <div>
                     <div class="chartItemBox">
                         <p>路口</p>
-                        <Dropdown :data="['item1','item2','item3']" v-model="LK"/>
+                        <Dropdown :data="crossingList" v-model="LK"/>
                     </div>
                     <div class="chartItemBox">
                         <p>数据类型</p>
-                        <Dropdown :data="['预警次数','预警类型','预警demo']" v-model="YJLX"/>
+                        <Dropdown :data="['流入流出','预警次数']" v-model="YJLX"/>
                     </div>
                     <div class="chartItemBox">
                         <p>分辨率</p>
-                        <Dropdown :data="['1分钟','1小时','1天']" v-model="FBL"/>
+                        <Dropdown :data="[10,30,60]" v-model="FBL"/>
                     </div>
                 </div>
                 <div>
@@ -214,6 +208,7 @@
 </template>
 
 <script>
+    import moment from 'moment';
     import Box from '../components/Box'
     import ScrollView from '../components/ScrollView'
     import Dropdown from '../components/Dropdown'
@@ -226,15 +221,16 @@
         data() {
             return {
                 zoom: 16,
-                center: [121.59996, 31.197646],
+                center: [114.06055,22.540582],
                 markers: [],
                 windows: [],
                 window: '',
                 LK: null,
-                YJLX: '预警次数',
-                FBL: '1分钟',
+                YJLX: null,
+                FBL: null,
                 SD: null,
                 ED: null,
+                crossing: this.$store.getters.crossing,
                 list1: [
                     { item: '离去车辆', count: 4744, percent: 0.55 },
                     { item: '进入车辆', count: 3519, percent: 0.45 },
@@ -266,45 +262,6 @@
                     { month: 'Dec', city: 'London', temperature: 4.8 },
                 ],
                 Details: null,
-                // Details: {
-                //     action: 'yuannan-01',
-                //     list: ['yuannan-01','yunan-02','yunan-03'],
-                //     type: 'PCrossing',        //  路口类型  十字 crossroad     T形 TCrossing      人形 PCrossing
-                //     element: [
-                //         {
-                //             name: '主单元',            //  单元名称
-                //             signal: 4,                //  信号强度
-                //             signalIcon: require('../assets/img/signal-4.png'),//    信号图片
-                //             electricQuantity: 80,     //  电量
-                //             passStatus: [false, true],//  车辆经过状态 对应每一个灯
-                //             video: '123',                //  录像
-                //         },
-                //         {
-                //             name: '一号单元',            //  单元名称
-                //             signal: 3,                //  信号强度
-                //             signalIcon: require('../assets/img/signal-3.png'),//    信号图片
-                //             electricQuantity: 60,     //  电量
-                //             passStatus: [false, false],//  车辆经过状态 对应每一个灯
-                //             video: '123',                //  录像
-                //         },
-                //         {
-                //             name: '二号单元',            //  单元名称
-                //             signal: 1,                //  信号强度
-                //             signalIcon: require('../assets/img/signal-1.png'),//    信号图片
-                //             electricQuantity: 10,     //  电量
-                //             passStatus: [false, false],//  车辆经过状态 对应每一个灯
-                //             video: '123',                //  录像
-                //         },
-                //         {
-                //             name: '三号单元',            //  单元名称
-                //             signal: 3,                //  信号强度
-                //             signalIcon: require('../assets/img/signal-3.png'),//    信号图片
-                //             electricQuantity: 60,     //  电量
-                //             passStatus: [false, false],//  车辆经过状态 对应每一个灯
-                //             video: '123',                //  录像
-                //         },
-                //     ]
-                // },
                 playUrl: ''
             }
         },
@@ -314,10 +271,15 @@
                 //     ? this.posterSrc
                 //     : require("./../assets/images/coveImg.png");
                 return require('../assets/img/video.png')
+            },
+            crossingList() {
+                const newList = []
+                this.crossing.map(e => newList.push(e[0]))
+                return newList
             }
         },
         mounted() {
-            this.initMap()
+            // this.initMap()
             setTimeout(() => {
                 if (this.$route.name !== 'Home') return
                 this.createChart1()
@@ -326,15 +288,19 @@
         },
         methods: {
             initMap() {
+                /**
+                 * 0: "哚基交叉口"
+                 1: "yunnan-101"
+                 2: "101.554234"
+                 3: "25.472808"
+                 * */
                 let markers = [];
                 let windows = [];
-
-                let num = 10;
                 let self = this;
 
-                for (let i = 0 ; i < num ; i ++) {
+                for (let i = 0 ; i < this.crossing.length ; i ++) {
                     markers.push({
-                        position: [121.59996, 31.197646 + i * 0.001],
+                        position: [Number(this.crossing[i][2]), Number(this.crossing[i][3])],
                         events: {
                             click() {
                                 self.windows.forEach(window => {
@@ -349,18 +315,17 @@
                         }
                     });
 
-
                     const dom = document.createElement('div')
                     dom.className = 'prompt'
                     dom.innerHTML = `
-                        <p>路口1</p>
-                        <p>路口编号：yuannan-101</p>
+                        <p>${this.crossing[i][0]}</p>
+                        <p>路口编号：${this.crossing[i][1]}</p>
                         <p>路口地址：广东省深圳市龙岗区五和路口</p>
                     `
                     const p = document.createElement('p')
                     p.innerHTML = '了解详情'
                     p.onclick = () => this.Details = {
-                        action: 'yuannan-01',
+                        action: this.crossing[i][1],
                             list: ['yuannan-01','yunan-02','yunan-03'],
                             type: 'crossroad',        //  路口类型  十字 crossroad     T形 TCrossing      人形 PCrossing
                             element: [
@@ -401,16 +366,27 @@
                     dom.appendChild(p)
 
                     windows.push({
-                        position: [121.6035, 31.197646 + i * 0.001 - 0.0035],
+                        position: [Number(this.crossing[i][2]) + 0.0028, Number(this.crossing[i][3]) - 0.0023],
                         content: dom,
                         visible: false
                     });
                 }
                 this.markers = markers;
                 this.windows = windows;
+                this.center = markers[0].position
             },
-            submit() {
-                console.log(this.LK,this.YJLX,this.FBL,this.SD,this.ED)
+            initCrossing() {
+                console.log('initCrossing',this.crossing)
+                if (this.crossing.length > 0) {
+                    this.$nextTick(() => {
+                        this.LK = this.crossing[0][0]
+                        this.YJLX = '预警次数'
+                        this.FBL = 10
+                        this.SD = moment().format('YYYY-MM-DD')
+                        this.ED = moment().format('YYYY-MM-DD')
+                        this.submit()
+                    })
+                }
             },
             //  环图
             createChart1() {
@@ -674,10 +650,37 @@
                 this.myVideo && this.myVideo.dispose();
                 this.myVideo = null
                 this.playUrl = null
-            }
+            },
+            submit() {
+                const num = !moment(this.SD).isSame(this.ED) && !moment(this.SD).isBefore(this.ED) ? '结束时间不能小于开始时间' :
+                    !this.LK ? '请选择路口' :
+                        !this.YJLX ? '请选择预警类型' :
+                            !this.FBL ? '请选择分辨率' : null
+                if (num) {
+                    alert(num)
+                } else {
+                    this.$fetch.Post('/connect2.php',{
+                        start_time: this.SD,
+                        end_time: this.ED,
+                        datatype: this.YJLX,
+                        ratio: this.FBL,
+                        routename: this.crossing[this.crossing.findIndex(e => e[0] === this.LK)][1]
+                    })
+                    .then(res => {
+                        console.log(res)
+                    })
+                }
+            },
         },
         beforeDestroy() {
             this.disposeVideo()
+        },
+        watch: {
+            '$store.getters.crossing': function(newValue) {
+                this.crossing = newValue
+                this.initMap()
+                if (!this.LK) this.initCrossing()
+            }
         },
         components: {
             Box,

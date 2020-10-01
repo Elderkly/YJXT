@@ -4,7 +4,7 @@
             <span :class="['ellipsis',!text ? 'defaultColor' : '']">{{!!text ? text : '请选择'}}</span>
             <img src="../assets/img/calendar.png" class="calendar">
         </div>
-        <a-date-picker :allowClear="false" :locale="locale" :style="{position:'absolute',left:0,opacity:visible ? 1 : 0,zIndex:visible ? 10 : -1}" class="data-picker" :open="visible" @change="panelChange"/>
+        <a-date-picker :allowClear="false" :locale="locale" :style="{position:'absolute',left:0,opacity:visible ? 1 : 0,zIndex:visible ? 10 : -1}" class="data-picker" :open="visible" @change="panelChange" :disabled-date="disabledDate"/>
     </div>
 </template>
 
@@ -28,10 +28,11 @@
                 visible: false,
             }
         },
-        mounted() {
-
-        },
         methods: {
+            disabledDate(current) {
+                // Can not select days before today and today
+                // return current && current < moment().endOf('day');
+            },
             panelChange(date, dateString) {
                 this.text = dateString
                 this.visible = false
@@ -47,12 +48,14 @@
         },
         watch: {
             visible(newValue) {
-                console.log(newValue)
                 if (newValue) {
                     document.body.addEventListener('mouseup',this.setUpVisible)
                 } else {
                     document.body.removeEventListener('mouseup',this.setUpVisible)
                 }
+            },
+            value(newValue){
+                this.text = newValue
             }
         }
     }
@@ -70,6 +73,7 @@
         box-sizing: border-box;
         align-items: center;
         width: 100%;
+        cursor: pointer;
         span{
             flex: 1;
             font-size: 20px;

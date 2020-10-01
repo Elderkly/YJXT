@@ -11,7 +11,10 @@ import './assets/style/video-js.min.css'
 import VueAMap from 'vue-amap'
 import Antd from 'ant-design-vue'
 import 'ant-design-vue/dist/antd.css'
+import Fetch from './common/fetch'
+import store from './vuex'
 
+Vue.prototype.$fetch = Fetch
 Vue.config.productionTip = false
 
 Vue.use(VueAMap)
@@ -29,5 +32,6 @@ new Vue({
   el: '#app',
   router,
   components: { App },
-  template: '<App/>'
+  template: '<App/>',
+  store
 })

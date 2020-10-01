@@ -18,7 +18,7 @@
         name: 'Dropdown',
         props: {
             value: {
-                type: String,
+                type: String | Number,
                 default: '请选择'
             },
             data: Array
@@ -35,6 +35,11 @@
                 this.text = this.data[item.key]
                 this.$emit('input',this.text)
             }
+        },
+        watch: {
+            value(newValue){
+                this.text = newValue
+            }
         }
     }
 </script>
@@ -50,6 +55,7 @@
         padding: 0 16px;
         box-sizing: border-box;
         align-items: center;
+        cursor: pointer;
         span{
             flex: 1;
             font-size: $Placeholder-Font-Size;

@@ -1,0 +1,2 @@
+export const ADD_CROSSING = 'ADD_CROSSING'
+export const SET_CROSSING = 'SET_CROSSING'

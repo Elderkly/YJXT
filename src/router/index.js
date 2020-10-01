@@ -18,5 +18,6 @@ export default new Router({
             name: 'Administer',
             component: Administer
         }
-    ]
+    ],
+    base: '/dist/', // 加上这一行
 })
