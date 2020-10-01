@@ -63,9 +63,9 @@
                     </div>
                     <ScrollView boxClass="serverFacilityBox" barClass="serverFacilityBarClass">
                         <div class="items" v-for="(item,index) in serverFacility">
-                            <span class="ellipsis">{{item.id}}</span>
-                            <span class="ellipsis">{{item.address}}</span>
-                            <span class="ellipsis">{{item.number}}</span>
+                            <span class="ellipsis">{{index + 1}}</span>
+                            <span class="ellipsis">{{item[0]}}</span>
+                            <span class="ellipsis">{{item[1]}}</span>
                             <span>查看</span>
                         </div>
                     </ScrollView>
@@ -115,48 +115,7 @@
                     shape: null         //  路口形状
                 },
                 //  连接到服务器的预警设备
-                serverFacility: [
-                    {
-                        id: 1,
-                        address: 'b8-27-eb-7e-6a-36',
-                        number: 'yunnan-101',
-                        config: {
-                            list: [12,2,3,4]
-                        }
-                    },
-                    {
-                        id: 2,
-                        address: 'b8-27-eb-7e-6a-36',
-                        number: 'yunnan-102',
-                        config: {
-                            list: [12,2,3,4]
-                        }
-                    },
-                    {
-                        id: 2,
-                        address: 'b8-27-eb-7e-6a-36',
-                        number: 'yunnan-102',
-                        config: {
-                            list: [12,2,3,4]
-                        }
-                    },
-                    {
-                        id: 2,
-                        address: 'b8-27-eb-7e-6a-36',
-                        number: 'yunnan-102',
-                        config: {
-                            list: [12,2,3,4]
-                        }
-                    },
-                    {
-                        id: 2,
-                        address: 'b8-27-eb-7e-6a-36',
-                        number: 'yunnan-102',
-                        config: {
-                            list: [12,2,3,4]
-                        }
-                    },
-                ],
+                serverFacility: [],
                 //  显示规则设置
                 displayRuleSettings: {
                     target: null,
@@ -193,6 +152,21 @@
                     },
                 }
             }
+        },
+        mounted() {
+            this.$fetch.Get('/connect4.php')
+                .then(res => {
+                    console.log(res)
+                    if (res.code === 200) {
+                        this.serverFacility = res.data
+                    }
+                })
+            this.$fetch.Post('/connect6.php',{
+                code: 'yunnan-101'
+            })
+                .then(res => {
+                    console.log(res)
+                })
         },
         methods: {
             getAddress(lng ,lat) {

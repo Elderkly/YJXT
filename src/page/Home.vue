@@ -279,7 +279,8 @@
             }
         },
         mounted() {
-            // this.initMap()
+            this.initMap()
+            if (!this.LK) this.initCrossing()
             setTimeout(() => {
                 if (this.$route.name !== 'Home') return
                 this.createChart1()
@@ -373,10 +374,9 @@
                 }
                 this.markers = markers;
                 this.windows = windows;
-                this.center = markers[0].position
+                this.center = markers[0] ? markers[0].position : this.center
             },
             initCrossing() {
-                console.log('initCrossing',this.crossing)
                 if (this.crossing.length > 0) {
                     this.$nextTick(() => {
                         this.LK = this.crossing[0][0]
@@ -677,9 +677,11 @@
         },
         watch: {
             '$store.getters.crossing': function(newValue) {
-                this.crossing = newValue
-                this.initMap()
-                if (!this.LK) this.initCrossing()
+                if (newValue.length !== this.crossing.length) {
+                    this.crossing = newValue
+                    this.initMap()
+                    if (!this.LK) this.initCrossing()
+                }
             }
         },
         components: {
