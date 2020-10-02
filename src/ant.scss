@@ -32,6 +32,11 @@
     margin-top: -8px!important;
     box-shadow: none!important;
 }
+.ant-dropdown-menu-item{
+    overflow:hidden; //超出的文本隐藏
+    text-overflow:ellipsis; //用省略号显示
+    white-space:nowrap; //不换行
+}
 .ant-dropdown-menu-item,.ant-dropdown-menu-item > a, .ant-dropdown-menu-submenu-title > a{
     color: rgba(255,255,255,.5)!important;
     font-size: $Placeholder-Font-Size!important;
@@ -101,4 +106,8 @@
         color: rgba(255,255,255,.8);
         margin-left: 5px;
     }
+}
+.HomeDropDown{
+    width: 200px;
+    min-width: 200px!important;
 }

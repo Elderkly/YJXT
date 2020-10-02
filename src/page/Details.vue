@@ -3,7 +3,7 @@
         <div class="detailsBox">
             <div class="details-left">
                 <p>当前路口编号</p>
-                <Dropdown :data="crossingList" v-model="route.name" class="Dropdown" @change="change"/>
+                <Dropdown :data="crossingList" v-model="route.name" class="Dropdown" @change="change" overlayClassName="HomeDropDown" />
                 <div class="crossing">
                     <div class="SZ" v-if="Details.type === 'crossroad'">
                         <CrossingItem/>

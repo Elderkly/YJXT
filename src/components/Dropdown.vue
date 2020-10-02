@@ -1,5 +1,5 @@
 <template>
-    <a-dropdown :trigger="['click']" @visibleChange="_visible => visible = _visible">
+    <a-dropdown :trigger="['click']" @visibleChange="_visible => visible = _visible" :overlayClassName="overlayClassName">
         <div class='textBox'>
             <span :class="['ellipsis',!text ? 'defaultColor' : '']">{{!!text ? text : '请选择'}}</span>
             <img v-if="!visible" src="../assets/img/right.png">
@@ -21,7 +21,8 @@
                 type: String | Number,
                 default: '请选择'
             },
-            data: Array
+            data: Array,
+            overlayClassName: String
         },
         data() {
             return {

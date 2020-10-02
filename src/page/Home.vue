@@ -27,7 +27,7 @@
                 <div>
                     <div class="chartItemBox">
                         <p>路口</p>
-                        <Dropdown :data="crossingList" v-model="LK"/>
+                        <Dropdown :data="crossingList" v-model="LK" overlayClassName="HomeDropDown" class="HomeDropDownBox"/>
                     </div>
                     <div class="chartItemBox">
                         <p>数据类型</p>
@@ -618,5 +618,8 @@
     }
     #c2{
         margin-top: 5%;
+    }
+    .HomeDropDownBox{
+        width: 200px;
     }
 </style>
