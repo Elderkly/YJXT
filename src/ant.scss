@@ -111,3 +111,9 @@
     width: 200px;
     min-width: 200px!important;
 }
+.ant-message-notice-content{
+    background: $Default-Bg!important;
+    span{
+        color: $Title-Color!important;
+    }
+}

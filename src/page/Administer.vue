@@ -135,14 +135,13 @@
                         if (!!self.address.name) return
                         self.address = {
                             center: [114.06055,22.540582],
-                            name: '广东省深圳市福田区莲花街道市民广场',
+                            name: '市民广场',
                         }
                     },
                     click(e) {
                         let { lng, lat } = e.lnglat;
                         self.lng = lng;
                         self.lat = lat;
-
                         self.getAddress(lng,lat)
                             .then(res => {
                                 self.center = [lng,lat]
@@ -182,7 +181,11 @@
                     geocoder.getAddress([lng ,lat], function(status, result) {
                         if (status === 'complete' && result.info === 'OK') {
                             if (result && result.regeocode) {
-                                resolve(result.regeocode.formattedAddress)
+                                try {
+                                    resolve(result.regeocode.aois[0] && result.regeocode.aois[0].name ? result.regeocode.aois[0].name : result.regeocode.formattedAddress)
+                                } catch (e) {
+                                    resolve(result.regeocode.formattedAddress)
+                                }
                             }
                         }
                     });
@@ -241,10 +244,11 @@
                                 loc: null,          //  详细地址
                             }
                         }
-                         alert(res.data)
+                        this.$store.commit('ADD_CROSSING', [loc,number,coord[0],coord[1]])
+                        this.$message.success(res.data);
                     })
                 } else {
-                    alert(num)
+                    this.$message.warning(num);
                 }
             },
             selectMoreElement(code) {
@@ -265,10 +269,10 @@
                         uintid: this.displayRuleSettings.target
                     })
                         .then(res => {
-                            alert(res.data)
+                            this.$message.success(res.data);
                         })
                 } else {
-                    alert('请选择单元')
+                    this.$message.warning('请选择单元');
                 }
             }
         },

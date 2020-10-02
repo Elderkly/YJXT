@@ -18,7 +18,7 @@
                 <div class="map-fixedBox-header">路口列表</div>
                 <ScrollView class="map-fixedBox-content" boxClass="map-fixedBox-scrollBox">
                     <div></div>
-                    <div class="ellipsis" v-for="item in crossing" @click="moveMap([item[2],item[3]])">{{item[0]}}}</div>
+                    <div class="ellipsis" v-for="item in crossing" @click="moveMap([item[2],item[3]])">{{item[0]}}</div>
                 </ScrollView>
             </div>
         </Box>
@@ -407,7 +407,7 @@
                         !this.YJLX ? '请选择预警类型' :
                             !this.FBL ? '请选择分辨率' : null
                 if (num) {
-                    alert(num)
+                    this.$message.warning(num);
                 } else {
                     this.$fetch.Post('/connect2.php',{
                         start_time: this.SD,
@@ -422,7 +422,7 @@
                         }
                     })
                     .catch(e => {
-                        alert('请求出错')
+                        this.$message.error('connect2请求出错');
                     })
                 }
             },
@@ -431,6 +431,7 @@
                 if (data.all_out === 0 && data.all_in === 0) {
                     this.chart1 && this.chart1.hide()
                     this.chart2 && this.chart2.hide()
+                    this.$message.warning('暂无数据');
                 } else {
                     const renderSwitch = this.list1.length === 0
                     const list1 = [

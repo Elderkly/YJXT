@@ -50,6 +50,8 @@
         position: relative;
         background: $BG;
         backdrop-filter: $Backdrop-Filter;
+        border-radius: 15px;
+        overflow: hidden;
         .dt-header{
             width: 100%;
             height: 60px;
