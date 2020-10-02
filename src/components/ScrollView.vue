@@ -26,7 +26,6 @@
             } else {
                 const nums = (height - headerHeight) / contentHeight
                 this.$refs.thumb.style.height = `${nums * 100}%`
-                console.log(nums)
                 this.createListen()
             }
         },

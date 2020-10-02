@@ -231,10 +231,7 @@
                 SD: null,
                 ED: null,
                 crossing: this.$store.getters.crossing,
-                list1: [
-                    { item: '离去车辆', count: 4744, percent: 0.55 },
-                    { item: '进入车辆', count: 3519, percent: 0.45 },
-                ],
+                list1: [],
                 list2: [
                     { month: 'Jan', city: 'Tokyo', temperature: 7 },
                     { month: 'Jan', city: 'London', temperature: 3.9 },
@@ -281,11 +278,6 @@
         mounted() {
             this.initMap()
             if (!this.LK) this.initCrossing()
-            setTimeout(() => {
-                if (this.$route.name !== 'Home') return
-                this.createChart1()
-                this.createChart2()
-            },500)
         },
         methods: {
             initMap() {
@@ -396,6 +388,7 @@
                     autoFit: true,
                     height: windowWidth * 0.13,
                 });
+                this.chart1 = chart
                 chart.data(this.list1);
                 chart.scale('percent', {
                     formatter: (val) => {
@@ -509,10 +502,10 @@
                 // Step 1: 创建 Chart 对象
                 const chart = new Chart({
                     container: 'c2', // 指定图表容器 ID
-                    height : windowWidth * 0.12, // 指定图表高度
+                    height : windowWidth * 0.145, // 指定图表高度
                     autoFit: true,
                 });
-
+                this.chart2 = chart
                 //  载入数据源
                 chart.data(this.list2);
                 //  刻度
@@ -526,13 +519,13 @@
                     },
                 });
                 //  刻度线
-                chart.axis('month', {tickLine: false,label:{
+                chart.axis('time', {tickLine: false,label:{
                     autoEllipsis: true,
                     style: {
                         fill: 'rgba(255, 255, 255, 0.8)',
                     }
                 }})
-                chart.axis('temperature', {
+                chart.axis('num', {
                     grid: null,
                     line: {
                         style: {
@@ -557,7 +550,7 @@
                     // },
                     itemTpl: `<div class="tooltip">
                         <img src='https://alipic.lanhuapp.com/xd5f119bbd-a2db-4d5d-a40d-2f02216ea1f5'/>
-                        <span>{temperature}</span>
+                        <span>{num}</span>
                     </div>`,
                 });
 
@@ -567,8 +560,8 @@
                 //  线条
                 chart
                     .line()
-                    .position('month*temperature')
-                    .color('city',['rgba(0, 119, 255, 1)','rgba(255, 79, 64, 1)'])
+                    .position('time*num')
+                    .color('type',['rgba(0, 119, 255, 1)','rgba(255, 79, 64, 1)'])
                     .shape('smooth')
                     .size(5)
                     .style({
@@ -576,32 +569,32 @@
                         position: 'right',
                         showCrosshairs: false,
                     })
-                    .tooltip('temperature*month', (temperature, month) => {
+                    .tooltip('num*time', (num, time) => {
                         return {
-                            temperature,
-                            month,
+                            num,
+                            time,
                         };
                     })
 
                 //  点
                 chart
                     .point()
-                    .position('month*temperature')
-                    .color('city',['rgba(0, 119, 255, 1)','rgba(255, 79, 64, 1)'])
+                    .position('time*num')
+                    .color('type',['rgba(0, 119, 255, 1)','rgba(255, 79, 64, 1)'])
                     .shape('circle')
                     .style({
-                        fields: [ 'month', 'temperature' ], // 数据字段
+                        fields: [ 'time', 'num' ], // 数据字段
                         callback: (xVal, yVal) => {
-                            if (xVal === self.list2[0].month || xVal === self.list2[self.list2.length - 1].month) {
+                            if (xVal === self.list2[0].time || xVal === self.list2[self.list2.length - 1].time) {
                                 return {r: 0}
                             }
                             return {strokeOpacity: 0}
                         }
                     })
                     .size(4.5)
-                    .tooltip('temperature', (temperature, value) => {
+                    .tooltip('num', (num, value) => {
                         return {
-                            temperature
+                            num
                         };
                     })
 
@@ -663,14 +656,59 @@
                         start_time: this.SD,
                         end_time: this.ED,
                         datatype: this.YJLX,
-                        ratio: this.FBL,
+                        ratio: String(this.FBL),
                         routename: this.crossing[this.crossing.findIndex(e => e[0] === this.LK)][1]
                     })
                     .then(res => {
-                        console.log(res)
+                        if (res.code === 200) {
+                            this.setChartData(res.data)
+                        }
+                    })
+                    .catch(e => {
+                        alert('请求出错')
                     })
                 }
             },
+            //  重组图标数据
+            setChartData(data) {
+                if (data.all_out === 0 && data.all_in === 0) {
+                    this.list1 = []
+                    this.list2 = []
+                    this.chart1 && this.chart1.changeData(this.list1)
+                    this.chart2 && this.chart2.changeData(this.list2)
+                } else {
+                    const renderSwitch = this.list1.length === 0
+                    const list1 = [
+                            { item: '离去车辆', count: data.all_out, percent: data.all_out === 0 && data.all_in === 0 ? 0 : Number((data.all_out / (data.all_out + data.all_in)).toFixed(2)) },
+                            { item: '进入车辆', count: data.all_in, percent: data.all_out === 0 && data.all_in === 0 ? 0 : Number((data.all_in / (data.all_out + data.all_in)).toFixed(2)) },
+                    ]
+                    const list2 = []
+                    data.x_time.map((e, index) => {
+                        list2.push({
+                            time: e,
+                            type: 'in',
+                            num: data.in[index]
+                        })
+                        list2.push({
+                            time: e,
+                            type: 'out',
+                            num: data.out[index]
+                        })
+                    })
+                    this.list1 = list1
+                    this.list2 = list2
+                    if (renderSwitch) {
+                            setTimeout(() => {
+                                if (this.$route.name !== 'Home') return
+                                this.createChart1()
+                                this.createChart2()
+                            },500)
+                    } else {
+                        this.chart1.changeData(this.list1)
+                        this.chart2.changeData(this.list2)
+                    }
+                }
+            }
         },
         beforeDestroy() {
             this.disposeVideo()

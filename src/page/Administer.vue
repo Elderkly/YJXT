@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="A-top">
-            <Box title="预警参数配置" class="top-left" rightButton="保存参数设置" :hiddenFloat=true :bottomBackgroundSize="2">
+            <Box title="预警参数配置" class="top-left" rightButton="保存参数设置" :hiddenFloat=true :bottomBackgroundSize="2" @hidden="submit">
                 <div class="top-box">
                     <div class="TB-left">
                         <div class="items">
@@ -47,7 +47,7 @@
                         </div>
                         <div class="items">
                             <p>布设单元个数</p>
-                            <Dropdown :data="['一个','两个','三个','四个']" v-model="submitConfig.element"/>
+                            <Dropdown :data="['1','2','3','4']" v-model="submitConfig.element"/>
                         </div>
                     </div>
                 </div>
@@ -66,7 +66,7 @@
                             <span class="ellipsis">{{index + 1}}</span>
                             <span class="ellipsis">{{item[0]}}</span>
                             <span class="ellipsis">{{item[1]}}</span>
-                            <span>查看</span>
+                            <span @click="">查看</span>
                         </div>
                     </ScrollView>
                 </div>
@@ -112,7 +112,8 @@
                     coord: null,        //  坐标
                     number: null,       //  编号
                     element: null,      //  单元个数
-                    shape: null         //  路口形状
+                    shape: null,        //  路口形状
+                    loc: null,          //  详细地址
                 },
                 //  连接到服务器的预警设备
                 serverFacility: [],
@@ -162,7 +163,7 @@
                     }
                 })
             this.$fetch.Post('/connect6.php',{
-                code: 'yunnan-101'
+                code: 'yunnan-101',
             })
                 .then(res => {
                     console.log(res)
@@ -191,6 +192,7 @@
             hiddenMap() {
                 this.openMap = false
                 this.submitConfig.coord = this.address.center
+                this.submitConfig.loc = this.address.name
             },
             onSearchResult(pois) {
                 if (pois.length > 0) {
@@ -209,6 +211,38 @@
                 const _con = this.$refs.fixedBox;   // 设置目标区域
                 if (_con === e.target) {
                     this.openMap = false
+                }
+            },
+            submit() {
+                const {config, coord, number, element, shape, loc} = this.submitConfig
+                const num = !config ? '请输入预警参数配置' :
+                    !coord ? '请输入坐标' : 
+                        !number ? '请输入编号' : 
+                            !element ? '请选择单元个数' : 
+                                !shape ? '请选择路口形状' : null
+                if (!num) {
+                    this.$fetch.Post('/connect3.php',{
+                        routeid: number,
+                        uintnum: element,
+                        warning: config,
+                        loc: loc,
+                        cord: coord
+                    })
+                    .then(res => {
+                        if (res.data.indexOf('设置更新成功') !== -1 || res.data.indexOf('设置创建成功') !== -1 ) {
+                            this.submitConfig = {
+                                config: null,       //  参数配置
+                                coord: null,        //  坐标
+                                number: null,       //  编号
+                                element: null,      //  单元个数
+                                shape: null,        //  路口形状
+                                loc: null,          //  详细地址
+                            }
+                        }
+                         alert(res.data)
+                    })
+                } else {
+                    alert(num)
                 }
             }
         },

@@ -56,6 +56,7 @@
         box-sizing: border-box;
         align-items: center;
         cursor: pointer;
+        overflow: hidden;
         span{
             flex: 1;
             font-size: $Placeholder-Font-Size;
