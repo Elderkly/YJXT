@@ -31,9 +31,9 @@
         },
         methods: {
             itemClick(item) {
-                console.log(this.data[item.key])
                 this.text = this.data[item.key]
                 this.$emit('input',this.text)
+                this.$emit('change',this.text)
             }
         },
         watch: {

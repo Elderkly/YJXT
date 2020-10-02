@@ -66,7 +66,7 @@
                             <span class="ellipsis">{{index + 1}}</span>
                             <span class="ellipsis">{{item[0]}}</span>
                             <span class="ellipsis">{{item[1]}}</span>
-                            <span @click="">查看</span>
+                            <span @click="selectMoreElement(item[1])">查看</span>
                         </div>
                     </ScrollView>
                 </div>
@@ -75,17 +75,18 @@
         <Box title="显示规则设置" class="A-bottom" :bottomBackgroundSize="3" :hiddenFloat="true">
             <div class="A-bottom-box">
                 <div class="B-left">
-                    <Dropdown :data="displayRuleSettings.targetList" v-model="displayRuleSettings.target"/>
+                    <Dropdown :data="getVoltage_log" v-model="displayRuleSettings.target"/>
                 </div>
                 <ScrollView class="B-right" boxClass="displayRuleSettingsBox">
                     <div class="placeholder"></div>
                     <div class="B-right-items-box">
-                        <div class="B-right-items ellipsis" v-for="(item,index) in displayRuleSettings.ruleList">
+                        <div class="B-right-items ellipsis" v-for="(item,index) in displayRuleSettings.ruleList" @click="send(item)">
                             {{item}}
                         </div>
                     </div>
                 </ScrollView>
             </div>
+            <div class="cover" v-if="voltage_log.length === 0"></div>
         </Box>
     </div>
 </template>
@@ -120,8 +121,8 @@
                 //  显示规则设置
                 displayRuleSettings: {
                     target: null,
-                    targetList: ['单元1','单元2','单元3'],
-                    ruleList: ['主路来车，停车让行','左侧来车，减速慢行','右侧来车，减速慢行','两侧来车减速慢性','减速慢行，主路优先','主路来车，注意避让','减速慢行','备用','夜间模式','白天模式','停止显示','显示逻辑1','显示逻辑2','显示逻辑3','显示逻辑3','显示逻辑3','显示逻辑3','显示逻辑3','显示逻辑3','显示逻辑3','显示逻辑3','显示逻辑3']
+                    routeid: null,
+                    ruleList: ['主路来车，停车让行','左侧来车，减速慢行','右侧来车，减速慢行','两侧来车减速慢性','减速慢行，主路优先','主路来车，注意避让','减速慢行','备用','夜间模式','白天模式','停止显示','显示逻辑1','显示逻辑2','显示逻辑3']
                 },
                 center: [114.06055,22.540582],
                 address: {
@@ -151,23 +152,24 @@
                                 }
                             })
                     },
-                }
+                },
+                voltage_log: []
             }
         },
         mounted() {
             this.$fetch.Get('/connect4.php')
                 .then(res => {
-                    console.log(res)
                     if (res.code === 200) {
                         this.serverFacility = res.data
                     }
                 })
-            this.$fetch.Post('/connect6.php',{
-                code: 'yunnan-101',
-            })
-                .then(res => {
-                    console.log(res)
-                })
+        },
+        computed: {
+            getVoltage_log() {
+                const newArr = []
+                this.voltage_log.map(e => newArr.push(e[0]))
+                return newArr
+            }
         },
         methods: {
             getAddress(lng ,lat) {
@@ -216,9 +218,9 @@
             submit() {
                 const {config, coord, number, element, shape, loc} = this.submitConfig
                 const num = !config ? '请输入预警参数配置' :
-                    !coord ? '请输入坐标' : 
-                        !number ? '请输入编号' : 
-                            !element ? '请选择单元个数' : 
+                    !coord ? '请输入坐标' :
+                        !number ? '请输入编号' :
+                            !element ? '请选择单元个数' :
                                 !shape ? '请选择路口形状' : null
                 if (!num) {
                     this.$fetch.Post('/connect3.php',{
@@ -243,6 +245,30 @@
                     })
                 } else {
                     alert(num)
+                }
+            },
+            selectMoreElement(code) {
+                this.$fetch.Post('/connect6.php',{
+                    code: code,
+                })
+                    .then(res => {
+                        this.displayRuleSettings.routeid = code
+                        this.voltage_log = res.data.voltage_log
+                    })
+            },
+            send(item) {
+                // console.log(item,this.displayRuleSettings)
+                if (this.displayRuleSettings.target) {
+                    this.$fetch.Post('/connect5.php',{
+                        warning: item,
+                        routeid: this.displayRuleSettings.routeid,
+                        uintid: this.displayRuleSettings.target
+                    })
+                        .then(res => {
+                            alert(res.data)
+                        })
+                } else {
+                    alert('请选择单元')
                 }
             }
         },
@@ -422,5 +448,12 @@
             }
         }
     }
-
+    .cover{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: red;
+        top: 0;
+        opacity: 0;
+    }
 </style>

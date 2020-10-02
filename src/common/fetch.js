@@ -28,7 +28,7 @@ export default {
             fetch(Host + path, params)
                 .then(res => {
                     //  只有connect3接口是直接返回文本的 做特殊处理
-                   return res.url.indexOf('connect3') !== -1 ? res.text() : res.json()
+                   return res.url.indexOf('connect3') !== -1 || res.url.indexOf('connect5') !== -1 ? res.text() : res.json()
                 })
                 .then(res => {
                     resolve({code: 200, data: res})
