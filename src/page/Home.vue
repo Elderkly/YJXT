@@ -107,10 +107,12 @@
         },
         methods: {
             moveMap(center) {
-                this.windows.forEach(window => {
-                    window.visible = false;
-                });
-                this.window.visible = false
+                if (this.window.visible) {
+                    this.windows.forEach(window => {
+                        window.visible = false;
+                    });
+                    this.window.visible = false
+                }
                 setTimeout(() => {
                     this.center = center
                 },100)
