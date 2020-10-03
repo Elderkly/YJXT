@@ -231,7 +231,8 @@
                         uintnum: element,
                         warning: config,
                         loc: loc,
-                        cord: coord
+                        cord: coord,
+                        roadtype: shape,
                     })
                     .then(res => {
                         if (res.data.indexOf('设置更新成功') !== -1 || res.data.indexOf('设置创建成功') !== -1 ) {
