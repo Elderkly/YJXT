@@ -208,6 +208,7 @@
                 })
                 .then(res => {
                     if (res.code === 200) {
+                        console.log('connect6.php',res)
                         this.regroup(res.data)
                     }
                 })
@@ -662,6 +663,7 @@
                 font-size: 18px;
                 color: rgba(255,255,255,.41);
                 margin-bottom: 8px;
+                text-align: center;
             }
             .signalIcon{
                 width: 50px;
