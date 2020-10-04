@@ -63,7 +63,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="RX" v-else>
+                    <div class="RX" v-else-if="Details.type === 'PCrossing'">
                         <CrossingItem class="RX-first-crossing" size="mini" :big="true" />
                         <CrossingItem class="RX-last-crossing" :blur="true" :big="true"/>
                         <div class="light-box">
