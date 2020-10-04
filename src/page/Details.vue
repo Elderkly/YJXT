@@ -219,7 +219,7 @@
             },
             //  获取信号强度
             getSignal(signal) {
-                return !!signal ? Math.min(1, Math.max(4, Math.round(signal))): 1
+                return !!signal ? Math.max(1, Math.round(Math.min(4, 4 * signal))): 1
             },
             //  重组api返回的数据
             regroup(data) {
@@ -266,7 +266,7 @@
                     element: []
                 }
                 const signalIconArr = [require('../assets/img/signal-1.png'),require('../assets/img/signal-2.png'),require('../assets/img/signal-3.png'),require('../assets/img/signal-4.png')]
-                data.voltage_log.map(e => {
+                data.uint_log[0] && data.uint_log.map(e => {
                     //  计算电量剩余百分比
                     const numberElectricQuantity = Number(e[1].replace(/V/,""))
                     const _electricQuantity = (numberElectricQuantity - 10) / 2 * 100
@@ -274,11 +274,11 @@
                     //  插入单元信息
                     newArr.element.push({
                         name: e[0],                                             //  单元名称
-                        signal: this.getSignal(data.signal),                    //  信号强度
-                        signalIcon: signalIconArr[this.getSignal(data.signal)], //  信号图片
+                        signal: this.getSignal(e[3]),                           //  信号强度
+                        signalIcon: signalIconArr[this.getSignal(e[3]) - 1],    //  信号图片
                         electricQuantity: electricQuantity,                     //  电量
                         passStatus: [false, false],                             //  车辆经过状态 对应每一个灯
-                        video: data.video_log,                                  //  录像
+                        video: e[4],                                            //  录像
                     })
                 })
                 //  写入重组后的数组

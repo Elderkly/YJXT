@@ -31,7 +31,7 @@
                     </div>
                     <div class="chartItemBox">
                         <p>数据类型</p>
-                        <Dropdown :data="['流入流出','预警次数']" v-model="YJLX"/>
+                        <Dropdown :data="['预警次数','流入流出','主路口车速变换','电压变化曲线']" v-model="YJLX"/>
                     </div>
                     <div class="chartItemBox">
                         <p>分辨率</p>
@@ -188,7 +188,7 @@
                 const chart = new Chart({
                     container: 'c1',
                     autoFit: true,
-                    height: windowWidth * 0.13,
+                    height: windowWidth * 0.10,
                 });
                 this.chart1 = chart
                 chart.data(this.list1);
@@ -304,7 +304,7 @@
                 // Step 1: 创建 Chart 对象
                 const chart = new Chart({
                     container: 'c2', // 指定图表容器 ID
-                    height : windowWidth * 0.145, // 指定图表高度
+                    height : windowWidth * 0.125, // 指定图表高度
                     autoFit: true,
                 });
                 this.chart2 = chart
@@ -469,7 +469,7 @@
                         this.chart2.show()
                     }
                 }
-                console.log(this.list1)
+                console.log(this.list2)
             }
         },
         watch: {
