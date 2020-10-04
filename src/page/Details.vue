@@ -101,29 +101,16 @@
             <div class="details-right">
                 <div class="middle-box">
                     <div class="middle-box-header">实时预警检测状态更新</div>
-                    <ScrollView class="middle-box-content" boxClass="details-scrollBox" type="text">
+                    <ScrollView class="middle-box-content" boxClass="details-scrollBox" type="text" ref='testing'>
                         <div></div>
-                        <p>CNN15日题为《随着消费者加入到经济复苏的行列中，中国经济摆脱了全球衰退的影响》的报道称，
-                            新冠疫情大流行将全球经济推向低谷，但中国经济正在逆流而上。中国经济已经连续多个月处于复苏模式，现在，消费者也愿意出来花钱了。</p>
+                        <p v-html="testing"></p>
                     </ScrollView>
                 </div>
                 <div class="middle-box">
                     <div class="middle-box-header">运行日志信息显示</div>
-                    <ScrollView class="middle-box-content" boxClass="details-scrollBox" type="text">
+                    <ScrollView class="middle-box-content" boxClass="details-scrollBox" type="text" ref='running'>
                         <div></div>
-                        <p>CNN15日题为《随着消费者加入到经济复苏的行列中，中国经济摆脱了全球衰退的影响》的报道称，新冠疫情大流行将全球经济推向低谷，但中国经济正在逆流而上。中国经济已经连续多个月处于复苏模式，现在，消费者也愿意出来花钱了。
-
-                            　　日本经济新闻16日报道，主要美企的高管15日先后亮相在重庆开幕的中国网上智博会，这凸显了中美科技对抗之际中国市场的战略重要性。美国科技巨头高通、英特尔、惠普在智博会开幕式上演讲，华为、腾讯和百度的高管也出席了会议。
-
-                            　　英国《金融时报》16日报道，在中国的新冠肺炎新增病例降至很低水平，且政府基础设施项目帮助支撑经济活动之后，中国经济复苏的势头增强。
-
-                            　　新加坡《联合早报》15日报道，亚洲开发银行15日发布报告说，中国是亚太地区少数成功摆脱经济低迷的经济体之一。CNN15日题为《随着消费者加入到经济复苏的行列中，中国经济摆脱了全球衰退的影响》的报道称，新冠疫情大流行将全球经济推向低谷，但中国经济正在逆流而上。中国经济已经连续多个月处于复苏模式，现在，消费者也愿意出来花钱了。
-
-                            　　日本经济新闻16日报道，主要美企的高管15日先后亮相在重庆开幕的中国网上智博会，这凸显了中美科技对抗之际中国市场的战略重要性。美国科技巨头高通、英特尔、惠普在智博会开幕式上演讲，华为、腾讯和百度的高管也出席了会议。
-
-                            　　英国《金融时报》16日报道，在中国的新冠肺炎新增病例降至很低水平，且政府基础设施项目帮助支撑经济活动之后，中国经济复苏的势头增强。
-
-                            　　新加坡《联合早报》15日报道，亚洲开发银行15日发布报告说，中国是亚太地区少数成功摆脱经济低迷的经济体之一。</p>
+                        <p v-html="running"></p>
                     </ScrollView>
                 </div>
             </div>
@@ -144,6 +131,7 @@
                 </div>
             </div>
         </div>
+        <!-- <div class="demo" @click='demo'> </div> -->
     </Box>
 </template>
 
@@ -153,6 +141,7 @@
     import Dropdown from '../components/Dropdown'
     import ScrollView from '../components/ScrollView'
     import videojs from 'video.js'
+    import Socket from '../common/socketclient.js'
     import 'videojs-contrib-hls'
     export default {
         name: 'Details',
@@ -162,6 +151,8 @@
                 playUrl: '',
                 Details: {},
                 crossing: this.$store.getters.crossing,
+                testing: '',        //  检测文本
+                running: '',        //  运行日志
             }
         },
         props: ['value'],
@@ -175,6 +166,7 @@
             this.disposeVideo()
             //  长链接-页面销毁 关闭长链接回收资源
             //  ...
+            this.closeSocket()
         },
         computed: {
             crossingList() {
@@ -187,11 +179,113 @@
             this.getApiData(this.route.code)
             //  长链接-创建长链接监听
             //  ...
+            this.initSocket(this.route.code)
         },
         methods: {
+            //  监控插入文本
+            changeLog(key, text) {
+                this[key] += `<p style="margin-bottom:5px">${text}</p>`
+                this.$refs[key] && this.$refs[key].scrollEnd()
+            },
+            demo() {
+                console.log('demo')
+                this.changeLog('running', `当前监控路口ID切换为123123123}`)
+            },
+            //  初始化长连接
+            initSocket(id) {
+                var sta_d = {'1': '车辆到来', '0': '车辆离开'};
+                var dir_d = {'0': '主单元', '1' : '1号单元', '2': '2号单元', '3': '3号单元'};
+                var car_detect_id = {'0': {'1': '主单元车辆到来', '0': '主单元车辆离开'}, 
+                                    '1': {'1': '1号单元车辆到来', '0': '1号单元车辆离开'}, 
+                                    '2': {'1': '2号单元车辆到来', '0': '2号单元车辆离开'}, 
+                                    '3': {'1': '3号单元车辆到来', '0': '3号单元车辆离开'}};
+
+                this.client = new Socket("134.175.65.106", 8089, "chat");
+                this.client.connect();
+                this.changeLog('testing', `当前监控路口ID切换为${id}`)
+                // 先发送路口id，101表示yunnan-101
+                // 即切换到101路口
+                const routeid_code = id.replace(/yunnan-/,'');
+                this.client.sendData(routeid_code);
+                this.client.onData = (text) => {
+                    // 第一种信息、车辆检测状态 text="101,0,1,2019-04-12 12:12:12"
+                    // 第二种信息、日志信息 text = "2019-08-17 21:27:42: 路口编号:yunnan-102 详情: 1号子单元和主单元断开了连接"
+                    // 第三种信息、连接状态提醒 text="已经成功连接到后台，正在等待数据更新！"
+                    // 实时预警状态更新必须要选择当前路口编号才能更新信息
+                    // 日志信息无论什么路口编号，都可以获取
+                    //20190817 jun
+                    console.log(text);
+                    if(text.indexOf('后台') == -1 && text.indexOf('详情') == -1 )
+                    {
+                        // 检测状态更新
+                        let msg = text.split(',');
+                        let data = '时间：' + msg[3] + '  单元号：' + dir_d[msg[1]] + '  检测状态：' + sta_d[msg[2]] + '\n';
+                        console.log('修改车辆信号灯',data);
+                        var dir_code = car_detect_id[msg[1]][msg[2]];
+
+                        //  查询需要更新来车信号的item
+                        const index = this.Details.element.findIndex(e => e.name === dir_d[msg[1]])
+                        if (index !== -1) {
+                            console.log(`更新${index}单元来车:${sta_d[msg[2]]}`)
+                            this.setPassStatus(this.Details.element[index].passStatus, msg[2] === '1' ? 0 : 1)
+                        }
+                    }
+                    else if(text.indexOf('详情') >= 0)
+                    {
+                        // 日志更新
+                        let data = text;
+                        console.log('日志更新',data);
+                        this.changeLog('running', data)
+                        //  2020-10-04 22:51:08 路口编号：yunnan-101 详情：0号单元,电池电压值：10.9V
+                        if (data.indexOf('断开') === -1) {
+                             try{
+                                //  获取单元 电量
+                                const item = data.split('详情：')[1] && data.split('详情：')[1].split(',')
+                                //  截取电量
+                                const _electricQuantity = item[1].replace(/电池电压值：/,'').replace(/V/,'')
+                                const electricQuantity = this.getElectricQuantity(_electricQuantity)
+                                //  查询是哪个单元
+                                const index = this.Details.element.findIndex(e => e.name === item[0])
+                                if (index !== -1) {
+                                    console.log('电量刷新',index,'号单元','电量',electricQuantity)
+                                    this.$set(this.Details.element[index],'electricQuantity',electricQuantity)
+                                }
+                            } catch(e) {
+                                console.log('长连接 刷新电池信息失败:',e)
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // 连接状态更新
+                        let data = text;
+                        console.log('连接状态更新',data);
+                        this.changeLog('testing', data)
+                    }
+                }
+                this.client.onClose = () => {
+                    console.log('连接关闭');
+                    // this.changeLog && this.changeLog('testing', '数据刷新失败，请刷新重试')
+                }
+            },
+            //  长连接切换
+            changeSocket(id) {
+                this.closeSocket()
+                this.initSocket(id)
+            },
+            closeSocket() {
+                this.client && this.client.close()
+            },
             //  关闭窗口
             hidden() {
                 this.$emit('close')
+            },
+            //  修改车辆信号等
+            setPassStatus(obj, key) {
+                this.$set(obj,key,true)
+                setTimeout(() => {
+                   this.$set(obj,key,false)
+                },1000)
             },
             //  根据路口名称查询编号
             getID(name) {
@@ -200,6 +294,7 @@
             //  左上角选项卡切换
             change(item) {
                 this.getApiData(this.getID(item))
+                this.changeSocket(this.getID(item))
             },
             //  调用接口查询当前路口数据
             getApiData(id) {
@@ -220,6 +315,12 @@
             //  获取信号强度
             getSignal(signal) {
                 return !!signal ? Math.max(1, Math.round(Math.min(4, 4 * signal))): 1
+            },
+            //  获取电量
+            getElectricQuantity(electricQuantity) {
+                const numberElectricQuantity = Number(electricQuantity)
+                const _electricQuantity = (numberElectricQuantity - 10) / 2 * 100
+                return parseInt(Math.max(0, Math.min(_electricQuantity, 100)))
             },
             //  重组api返回的数据
             regroup(data) {
@@ -261,16 +362,17 @@
                             }
                  ]
                  * */
+                const type = this.getRoadtype(data.roadtype)
                 const newArr = {
-                    type: this.getRoadtype(data.roadtype),
+                    type: type,
                     element: []
                 }
                 const signalIconArr = [require('../assets/img/signal-1.png'),require('../assets/img/signal-2.png'),require('../assets/img/signal-3.png'),require('../assets/img/signal-4.png')]
-                data.uint_log[0] && data.uint_log.map(e => {
+                data.uint_log[0] && data.uint_log.map((e,index) => {
+                    //  限制对应路口类型最大单元数
+                    if (type === 'crossroad' && index > 3 || type === 'TCrossing' && index > 2 || type === 'PCrossing' && index > 1) return
                     //  计算电量剩余百分比
-                    const numberElectricQuantity = Number(e[1].replace(/V/,""))
-                    const _electricQuantity = (numberElectricQuantity - 10) / 2 * 100
-                    const electricQuantity = parseInt(Math.max(0, Math.min(_electricQuantity, 100)))
+                    const electricQuantity = this.getElectricQuantity(e[1].replace(/V/,""))
                     //  插入单元信息
                     newArr.element.push({
                         name: e[0],                                             //  单元名称
@@ -437,6 +539,7 @@
                     right: 220px;
                     bottom: 75px;
                     flex-direction: column;
+                    transform: rotate(180deg);
                     img:first-child{
                         margin-bottom: 47px;
                     }
@@ -444,6 +547,7 @@
                 .light:nth-child(3){
                     right: 55px;
                     top: 225px;
+                    transform: rotate(180deg);
                     img:first-child{
                         margin-right: 47px;
                     }
@@ -517,6 +621,7 @@
                     right: 220px;
                     bottom: 115px;
                     flex-direction: column;
+                    transform: rotate(180deg);
                     img:first-child{
                         margin-bottom: 47px;
                     }
@@ -531,6 +636,7 @@
                 .light:nth-child(3){
                     right: 60px;
                     top: 130px;
+                    transform: rotate(180deg);
                     img:first-child{
                         margin-right: 47px;
                     }
@@ -614,11 +720,13 @@
                     right: 120px;
                     bottom: 145px;
                     flex-direction: column;
+                    transform: rotate(180deg);
                     img:first-child{
                         margin-bottom: 20px;
+                        transform: translateX(55px);
                     }
                     img:last-child{
-                        transform: translateX(-55px);
+                        // transform: translateX(-55px);
                     }
                 }
             }
@@ -741,5 +849,14 @@
                 overflow: hidden;
             }
         }
+    }
+    .demo{
+        position: absolute;
+        top: 200px;
+        right: 200px;
+        width: 200px;
+        height: 200px;
+        background: red;
+        z-index: 9999;
     }
 </style>

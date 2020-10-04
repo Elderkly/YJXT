@@ -16,20 +16,25 @@
         name: 'ScrollView',
         props: ['boxClass','type','barClass'],
         mounted() {
-            //  动态计算滑块高度
-            const headerHeight = 50
-            const contentHeight = this.$refs.slot.clientHeight
-            const height = this.$refs.scrollView.clientHeight
-            //  如果内容高度小于窗口高度则隐藏滚动条
-            if (contentHeight < height) {
-                this.$refs.scrollBar.style.opacity = 0
-            } else {
-                const nums = (height - headerHeight) / contentHeight
-                this.$refs.thumb.style.height = `${nums * 100}%`
-                this.createListen()
-            }
+            this.initDom()
+            this.createListen()
         },
         methods: {
+            initDom() {
+                //  动态计算滑块高度
+                const headerHeight = 50
+                const contentHeight = this.$refs.slot.clientHeight
+                const height = this.$refs.scrollView.clientHeight
+                console.log(contentHeight,height)
+                //  如果内容高度小于窗口高度则隐藏滚动条
+                if (contentHeight < height) {
+                    this.$refs.scrollBar.style.opacity = 0
+                } else {
+                    this.$refs.scrollBar.style.opacity = 1
+                    const nums = (height - headerHeight) / contentHeight
+                    this.$refs.thumb.style.height = `${nums * 100}%`
+                }
+            },
             createListen() {
                 this.$refs.scrollView.onscroll = e => {
                     /**
@@ -41,6 +46,11 @@
                     const moveHeight = Math.min(scrollHeight * scrollBoxHeight, scrollBoxHeight)
                     this.$refs.thumb.style.cssText += `margin-top:${moveHeight}px`
                 }
+            },
+            scrollEnd() {
+                console.log('scrollEnd')
+                this.initDom()
+                this.$nextTick(() => this.$refs.scrollView.scrollTo(0, 999999))
             }
         }
     }
