@@ -306,18 +306,18 @@
                     container: 'c2', // 指定图表容器 ID
                     height : windowWidth * 0.125, // 指定图表高度
                     autoFit: true,
+                    // padding: [0, 0, 20, 0]
                 });
                 this.chart2 = chart
                 //  载入数据源
                 chart.data(this.list2);
+                let maxNum = 0
+                this.list2.map(e => maxNum = e.num > maxNum ? e.num : maxNum)
                 //  刻度
                 chart.scale({
-                    month: {
-                        range: [0, 1],
-                        nice: true,
-                    },
-                    temperature: {
-                        nice: true,
+                    num: {
+                        min: 0,
+                        max: maxNum + 5,
                     },
                 });
                 //  刻度线
@@ -347,9 +347,9 @@
                 //  辅助线
                 chart.tooltip({
                     showTitle: false,   //  是否显示标题
-                    // marker: {        //  配置鼠标移入时的圆点
-                    //     r: 1
-                    // },
+                    marker: {        //  配置鼠标移入时的圆点
+                        r: 3
+                    },
                     itemTpl: `<div class="tooltip">
                         <img src='https://alipic.lanhuapp.com/xd5f119bbd-a2db-4d5d-a40d-2f02216ea1f5'/>
                         <span>{num}</span>
@@ -365,7 +365,7 @@
                     .position('time*num')
                     .color('type',['rgba(0, 119, 255, 1)','rgba(255, 79, 64, 1)'])
                     .shape('smooth')
-                    .size(5)
+                    .size(3.5)
                     .style({
                         lineCap: 'round',
                         position: 'right',
@@ -393,7 +393,7 @@
                             return {strokeOpacity: 0}
                         }
                     })
-                    .size(4.5)
+                    .size(3)
                     .tooltip('num', (num, value) => {
                         return {
                             num
@@ -442,6 +442,8 @@
                     ]
                     const list2 = []
                     data.x_time.map((e, index) => {
+                        // if (data.x_time.length > 6 && index % Math.floor(data.x_time.length / 6) !== 0) return
+                        // console.log(index)
                         list2.push({
                             time: e,
                             type: 'in',
@@ -464,7 +466,8 @@
                     } else {
                         this.chart1.destroy()
                         this.createChart1()
-                        this.chart2.changeData(this.list2)
+                        this.chart2.destroy()
+                        this.createChart2()
                         this.chart1.show()
                         this.chart2.show()
                     }
