@@ -51,7 +51,7 @@
         background: $BG;
         backdrop-filter: $Backdrop-Filter;
         border-radius: 15px;
-        overflow: hidden;
+        // overflow: hidden;
         .dt-header{
             width: 100%;
             height: 60px;
@@ -66,10 +66,10 @@
             position: absolute;
             z-index: 15;
             &>img:nth-child(1){
-                width: 56%;
-                height: 80%;
+                width: 100%;
+                height: 100%;
                 position: absolute;
-                top: -25px;
+                top: -28px;
             }
             &>img:nth-child(2){
                 width: 34px;
