@@ -184,7 +184,7 @@
         methods: {
             //  监控插入文本
             changeLog(key, text) {
-                this[key] += `<p style="margin-bottom:5px">${text}</p>`
+                this[key] = `<p style="margin-bottom:5px">${text}</p>` + this[key]
                 this.$refs[key] && this.$refs[key].scrollEnd()
             },
             demo() {
@@ -202,11 +202,6 @@
 
                 this.client = new Socket("134.175.65.106", 8089, "chat");
                 this.client.connect();
-                this.changeLog('testing', `当前监控路口ID切换为${id}`)
-                // 先发送路口id，101表示yunnan-101
-                // 即切换到101路口
-                const routeid_code = id.replace(/yunnan-/,'');
-                this.client.sendData(routeid_code);
                 this.client.onData = (text) => {
                     // 第一种信息、车辆检测状态 text="101,0,1,2019-04-12 12:12:12"
                     // 第二种信息、日志信息 text = "2019-08-17 21:27:42: 路口编号:yunnan-102 详情: 1号子单元和主单元断开了连接"
@@ -261,6 +256,13 @@
                         let data = text;
                         console.log('连接状态更新',data);
                         this.changeLog('testing', data)
+                        if (data.indexOf('成功') !== -1) {
+                            // 先发送路口id，101表示yunnan-101
+                            // 即切换到101路口
+                            const routeid_code = id.replace(/yunnan-/,'');
+                            this.client.sendData(routeid_code);
+                            this.changeLog('testing', `当前监控路口ID切换为${id}`)
+                        }
                     }
                 }
                 this.client.onClose = () => {

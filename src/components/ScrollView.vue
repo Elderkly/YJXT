@@ -50,7 +50,7 @@
             scrollEnd() {
                 console.log('scrollEnd')
                 this.initDom()
-                this.$nextTick(() => this.$refs.scrollView.scrollTo(0, 999999))
+                // this.$nextTick(() => this.$refs.scrollView.scrollTo(0, 999999))
             }
         }
     }

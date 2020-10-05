@@ -42,10 +42,8 @@ export default function SocketClient(ip,port,query) {
     }
     
     this.sendData = function (text) {
-        this.socket.onopen(() => {
-            var data = this.uid+'<split>'+this.sign+'<split>'+text
-            this.socket.send(data);
-        })
+        var data = this.uid+'<split>'+this.sign+'<split>'+text
+        this.socket.send(data);
     }
     
     this.close = function() {
