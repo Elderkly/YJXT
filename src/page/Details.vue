@@ -195,9 +195,9 @@
             initSocket(id) {
                 var sta_d = {'1': '车辆到来', '0': '车辆离开'};
                 var dir_d = {'0': '主单元', '1' : '1号单元', '2': '2号单元', '3': '3号单元'};
-                var car_detect_id = {'0': {'1': '主单元车辆到来', '0': '主单元车辆离开'}, 
-                                    '1': {'1': '1号单元车辆到来', '0': '1号单元车辆离开'}, 
-                                    '2': {'1': '2号单元车辆到来', '0': '2号单元车辆离开'}, 
+                var car_detect_id = {'0': {'1': '主单元车辆到来', '0': '主单元车辆离开'},
+                                    '1': {'1': '1号单元车辆到来', '0': '1号单元车辆离开'},
+                                    '2': {'1': '2号单元车辆到来', '0': '2号单元车辆离开'},
                                     '3': {'1': '3号单元车辆到来', '0': '3号单元车辆离开'}};
 
                 this.client = new Socket("134.175.65.106", 8089, "chat");
@@ -216,8 +216,7 @@
                         let msg = text.split(',');
                         let data = '时间：' + msg[3] + '  单元号：' + dir_d[msg[1]] + '  检测状态：' + sta_d[msg[2]] + '\n';
                         console.log('修改车辆信号灯',data);
-                        var dir_code = car_detect_id[msg[1]][msg[2]];
-
+                        this.changeLog('running', data)
                         //  查询需要更新来车信号的item
                         const index = this.Details.element.findIndex(e => e.name === dir_d[msg[1]])
                         if (index !== -1) {

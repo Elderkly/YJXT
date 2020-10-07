@@ -324,6 +324,7 @@
                 chart.axis('time', {tickLine: false,label:{
                     autoHide: true,
                     autoEllipsis: true,
+                    autoRotate: false,
                     style: {
                         fill: 'rgba(255, 255, 255, 0.8)',
                         fontSize: 10
