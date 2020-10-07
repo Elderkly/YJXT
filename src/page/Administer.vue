@@ -166,7 +166,7 @@
         computed: {
             getVoltage_log() {
                 const newArr = []
-                this.voltage_log.map(e => newArr.push(e[0]))
+                this.voltage_log && this.voltage_log.map(e => newArr.push(e[0]))
                 return newArr
             }
         },
@@ -258,7 +258,7 @@
                 })
                     .then(res => {
                         this.displayRuleSettings.routeid = code
-                        this.voltage_log = res.data.voltage_log
+                        this.voltage_log = res.data.uint_log
                     })
             },
             send(item) {
