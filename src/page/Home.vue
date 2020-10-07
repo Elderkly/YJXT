@@ -322,10 +322,16 @@
                 });
                 //  刻度线
                 chart.axis('time', {tickLine: false,label:{
+                    autoHide: true,
                     autoEllipsis: true,
                     style: {
                         fill: 'rgba(255, 255, 255, 0.8)',
-                    }
+                        fontSize: 10
+                    },
+                    // formatter: (text, item, index) => {
+                    //     // console.log(text, item, index)
+                    //     return this.getTime(text)
+                    // }
                 }})
                 chart.axis('num', {
                     grid: null,
@@ -336,9 +342,9 @@
                         },
                     },
                     label: {
+                        autoHide: true,
                         autoEllipsis: true,
                         style: {
-                            // x: 0,
                             fill: 'rgba(255, 255, 255, 0.8)',
                         }
                     }
@@ -357,7 +363,18 @@
                 });
 
                 //  图例
-                chart.legend(false);
+                // chart.legend(false);
+                chart.legend({
+                    // position: 'right',
+                    itemName: {
+                        style: {
+                            fill: 'rgba(255, 255, 255, 0.8)',
+                        }
+                    },
+                    marker: {
+                        // symbol: "hyphen",
+                    },
+                });
 
                 //  线条
                 chart
@@ -428,6 +445,16 @@
                     })
                 }
             },
+            //  截取时间
+            getTime(time){
+                try{
+                    return time.split(' ')[0].split('-')[2] + '日' + time.split(' ')[1].split(':')[0] + '时'
+                    // return time.split(':')[0] + ':' +time.split(':')[1]
+                } catch (e) {
+                    console.log('getTimeError',time,e)
+                    return time
+                }
+            },
             //  重组图标数据
             setChartData(data) {
                 if (data.all_out === 0 && data.all_in === 0) {
@@ -442,17 +469,16 @@
                     ]
                     const list2 = []
                     data.x_time.map((e, index) => {
-                        // if (data.x_time.length > 6 && index % Math.floor(data.x_time.length / 6) !== 0) return
-                        // console.log(index)
+                        if (data.x_time.length > 12 && index % Math.floor(data.x_time.length / 11) !== 0) return
                         list2.push({
-                            time: e,
+                            time: this.getTime(e),
                             type: 'in',
-                            num: data.in[index]
+                            num: data.in[index],
                         })
                         list2.push({
-                            time: e,
+                            time: this.getTime(e),
                             type: 'out',
-                            num: data.out[index]
+                            num: data.out[index],
                         })
                     })
                     this.list1 = list1
