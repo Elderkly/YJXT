@@ -25,7 +25,7 @@
                 const headerHeight = 50
                 const contentHeight = this.$refs.slot.clientHeight
                 const height = this.$refs.scrollView.clientHeight
-                console.log(contentHeight,height)
+                // console.log(contentHeight,height)
                 //  如果内容高度小于窗口高度则隐藏滚动条
                 if (contentHeight < height) {
                     this.$refs.scrollBar.style.opacity = 0

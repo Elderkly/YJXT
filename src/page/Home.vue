@@ -31,7 +31,7 @@
                     </div>
                     <div class="chartItemBox">
                         <p>数据类型</p>
-                        <Dropdown :data="['预警次数','流入流出','主路口车速变换','电压变化曲线']" v-model="YJLX"/>
+                        <Dropdown :data="['预警次数','方向流量','电压变化','车速变换']" v-model="YJLX"/>
                     </div>
                     <div class="chartItemBox">
                         <p>分辨率</p>
@@ -204,10 +204,24 @@
                 });
 
                 //  提示
-                chart.tooltip(false);
+                chart.tooltip({
+                    showTitle: false,   //  是否显示标题
+                    itemTpl: `<div class="tooltip">
+                        <img src='https://alipic.lanhuapp.com/xd5f119bbd-a2db-4d5d-a40d-2f02216ea1f5'/>
+                        <span>{item}: {percent}%</span>
+                    </div>`,
+                });
 
                 //  图例
-                chart.legend(false);
+                // chart.legend(false);
+                chart.legend({
+                    // position: 'right',
+                    itemName: {
+                        style: {
+                            fill: 'rgba(255, 255, 255, 0.8)',
+                        }
+                    },
+                });
 
                 chart
                     .interval({
@@ -231,67 +245,73 @@
                     })
                     .adjust('stack')
                     .position('percent')
-                    .color('item',['rgba(0, 119, 255, 1)','rgba(255, 79, 64, 1)'])
+                    .color('item',['rgba(0, 119, 255, 1)','rgba(255, 79, 64, 1)','yellow','#000'])
+                    .tooltip('item*percent', (item, percent) => {
+                        return {
+                            item,
+                            percent: percent * 100,
+                        };
+                    })
                     // .label('percent', (percent) => {
                     //     return {
                     //         content: (data) => {
-                    //             return `${data.item}: <span>${percent * 100}%</span>`;
+                    //             return percent * 100;
                     //         },
                     //     };
                     // })
-                    .label('percent', {
-                        layout: [{ type: 'pie-spider' }, { type: 'hide-overlap' }],
-                        offset: 35,
-                        labelHeight: 38,
-                        content: (obj, item) => {
-                            const G = getEngine('canvas');
-                            const group = new G.Group({});
-                            // 了解 shape 的绘制原理：y0 左下起点 y1 右上起点
-                            const [y0, y1] = item.y || [0, 0];
-                            const inRight = y0 < y1;
-                            const textAlign = inRight ? 'left' : 'right';
-
-                            const topFontSize = windowWidth * 0.00729166;
-                            const bottomFontSize = windowWidth * 0.009375;
-                            group.addShape({
-                                type: 'text',
-                                attrs: {
-                                    x: 0,
-                                    y: 0,
-                                    text: obj.item,
-                                    fill: 'rgba(255, 255, 255, 0.5)',
-                                    fontSize: topFontSize,
-                                    textAlign,
-                                },
-                            });
-
-                            group.addShape({
-                                type: 'text',
-                                attrs: {
-                                    x: 0,
-                                    y: 4,
-                                    text: `${obj.count}(${(obj.percent * 100).toFixed(2)}%)`,
-                                    textAlign,
-                                    textBaseline: 'top',
-                                    fill: 'rgba(255, 255, 255, 0.8)',
-                                    fontWeight: 700,
-                                    fontSize: bottomFontSize,
-                                },
-                            });
-
-                            if (!inRight) {
-                                group.translate(group.getBBox().width, 0);
-                            }
-                            group.translate(0, topFontSize);
-                            return group;
-                        },
-                        labelLine: {
-                            style: {
-                                lineWidth: 1.5,
-                                stroke: 'rgba(255, 255, 255, .8)',
-                            },
-                        },
-                    })
+                    // .label('percent', {
+                    //     layout: [{ type: 'pie-spider' }, { type: 'hide-overlap' }],
+                    //     offset: 35,
+                    //     labelHeight: 38,
+                    //     content: (obj, item) => {
+                    //         const G = getEngine('canvas');
+                    //         const group = new G.Group({});
+                    //         // 了解 shape 的绘制原理：y0 左下起点 y1 右上起点
+                    //         const [y0, y1] = item.y || [0, 0];
+                    //         const inRight = y0 < y1;
+                    //         const textAlign = inRight ? 'left' : 'right';
+                    //
+                    //         const topFontSize = windowWidth * 0.00729166;
+                    //         const bottomFontSize = windowWidth * 0.009375;
+                    //         group.addShape({
+                    //             type: 'text',
+                    //             attrs: {
+                    //                 x: 0,
+                    //                 y: 0,
+                    //                 text: obj.item,
+                    //                 fill: 'rgba(255, 255, 255, 0.5)',
+                    //                 fontSize: topFontSize,
+                    //                 textAlign,
+                    //             },
+                    //         });
+                    //
+                    //         group.addShape({
+                    //             type: 'text',
+                    //             attrs: {
+                    //                 x: 0,
+                    //                 y: 4,
+                    //                 text: `${obj.count}(${(obj.percent * 100).toFixed(2)}%)`,
+                    //                 textAlign,
+                    //                 textBaseline: 'top',
+                    //                 fill: 'rgba(255, 255, 255, 0.8)',
+                    //                 fontWeight: 700,
+                    //                 fontSize: bottomFontSize,
+                    //             },
+                    //         });
+                    //
+                    //         if (!inRight) {
+                    //             group.translate(group.getBBox().width, 0);
+                    //         }
+                    //         group.translate(0, topFontSize);
+                    //         return group;
+                    //     },
+                    //     labelLine: {
+                    //         style: {
+                    //             // lineWidth: 1.5,
+                    //             stroke: 'rgba(255, 255, 255, .8)',
+                    //         },
+                    //     },
+                    // })
 
                 chart.interaction('element-active');
 
@@ -381,7 +401,7 @@
                 chart
                     .line()
                     .position('time*num')
-                    .color('type',['rgba(0, 119, 255, 1)','rgba(255, 79, 64, 1)'])
+                    .color('type',['rgba(0, 119, 255, 1)','rgba(255, 79, 64, 1)','yellow','#000'])
                     .shape('smooth')
                     .size(3.5)
                     .style({
@@ -400,7 +420,7 @@
                 chart
                     .point()
                     .position('time*num')
-                    .color('type',['rgba(0, 119, 255, 1)','rgba(255, 79, 64, 1)'])
+                    .color('type',['rgba(0, 119, 255, 1)','rgba(255, 79, 64, 1)','yellow','#000'])
                     .shape('circle')
                     .style({
                         fields: [ 'time', 'num' ], // 数据字段
@@ -442,6 +462,7 @@
                         }
                     })
                     .catch(e => {
+                        console.log('connect2请求出错:',e)
                         this.$message.error('connect2请求出错');
                     })
                 }
@@ -458,48 +479,91 @@
             },
             //  重组图标数据
             setChartData(data) {
-                if (data.all_out === 0 && data.all_in === 0) {
-                    this.chart1 && this.chart1.hide()
-                    this.chart2 && this.chart2.hide()
+                let [allNum,all_in,all_out] = [0,0,0]
+                if (this.YJLX === '车速变换') {
+                    allNum = data.average_speed.reduce((p,c) => p + c)
+                } else if (this.YJLX === '电压变化') {
+                    allNum = 100
+                } else {
+                    [all_in, all_out] = [
+                        data.all_in.reduce((p,c) => p + c),
+                        data.all_out.reduce((p,c) => p + c),
+                    ]
+                    allNum = all_in + all_out
+                }
+                // console.log(data, allNum,all_in,all_out,this.YJLX)
+
+                if (allNum === 0 || (this.YJLX === '电压变化' && data.voltage[0].length === 0)) {
+                    this.chart1 && this.chart1.destroy()
+                    this.chart2 && this.chart2.destroy()
                     this.$message.warning('暂无数据');
                 } else {
-                    const renderSwitch = this.list1.length === 0
-                    const list1 = [
-                            { item: '离去车辆', count: data.all_out, percent: data.all_out === 0 && data.all_in === 0 ? 0 : Number((data.all_out / (data.all_out + data.all_in)).toFixed(2)) },
-                            { item: '进入车辆', count: data.all_in, percent: data.all_out === 0 && data.all_in === 0 ? 0 : Number((data.all_in / (data.all_out + data.all_in)).toFixed(2)) },
-                    ]
-                    const list2 = []
-                    data.x_time.map((e, index) => {
-                        if (data.x_time.length > 12 && index % Math.floor(data.x_time.length / 11) !== 0) return
-                        list2.push({
-                            time: this.getTime(e),
-                            type: 'in',
-                            num: data.in[index],
+                    const [list1, list2] = [[],[]]
+                    if (this.YJLX === '车速变换') {
+                        data.average_speed.map((e,index) => {
+                            const percent = Number((e / allNum).toFixed(2))
+                            percent !== '0.00' && list1.push({
+                                item: `${index}号单元`,
+                                count: e,
+                                percent
+                                // percent: percent === '0.00' ? 0.01 : percent === '1.00' ? 0.99 : percent
+                            })
                         })
-                        list2.push({
-                            time: this.getTime(e),
-                            type: 'out',
-                            num: data.out[index],
+                        data.speed.map((x,xIndex) => {
+                            data.x_time.map((e, index) => {
+                                if (data.x_time.length > 12 && index % Math.floor(data.x_time.length / 11) !== 0) return
+                                list2.push({
+                                    time: this.getTime(e),
+                                    type: `${xIndex}号单元`,
+                                    num: data.speed[xIndex][index],
+                                })
+                            })
                         })
-                    })
+                    } else if (this.YJLX === '电压变化') {
+                        data.voltage.map((x,xIndex) => {
+                            data.x_time.map((e, index) => {
+                                if (data.x_time.length > 12 && index % Math.floor(data.x_time.length / 11) !== 0) return
+                                list2.push({
+                                    time: this.getTime(e),
+                                    type: `${xIndex}号单元`,
+                                    num: data.voltage[xIndex][index],
+                                })
+                            })
+                        })
+                    } else {
+                        data.all_in.map((e, index) => {
+                            const count = e + data.all_out[index]
+                            const percent = Number((count / allNum).toFixed(2))
+                            percent !== '0.00' && list1.push({
+                                item: `${index}号单元`,
+                                count: count,
+                                percent
+                                // percent: percent === '0.00' ? 0.01 : percent === '1.00' ? 0.99 : percent
+                            })
+                        })
+                        data.in.map((x,xIndex) => {
+                            data.x_time.map((e, index) => {
+                                if (data.x_time.length > 12 && index % Math.floor(data.x_time.length / 11) !== 0) return
+                                list2.push({
+                                    time: this.getTime(e),
+                                    type: `${xIndex}号单元`,
+                                    num: data.in[xIndex][index] + data.out[xIndex][index],
+                                })
+                            })
+                        })
+                    }
                     this.list1 = list1
                     this.list2 = list2
-                    if (renderSwitch) {
-                            setTimeout(() => {
-                                if (this.$route.name !== 'Home') return
-                                this.createChart1()
-                                this.createChart2()
-                            },500)
-                    } else {
-                        this.chart1.destroy()
+
+                    this.chart1 && this.chart1.destroy()
+                    this.chart2 && this.chart2.destroy()
+                    setTimeout(() => {
                         this.createChart1()
-                        this.chart2.destroy()
+                        this.YJLX === '电压变化' && this.chart1 && this.chart1.hide()
                         this.createChart2()
-                        this.chart1.show()
-                        this.chart2.show()
-                    }
+                    }, 500)
                 }
-                console.log(this.list2)
+                console.log(this.list1)
             }
         },
         watch: {
