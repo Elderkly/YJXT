@@ -188,7 +188,8 @@
                 const chart = new Chart({
                     container: 'c1',
                     autoFit: true,
-                    height: windowWidth * 0.10,
+                    // height: windowWidth * 0.10,
+                    height: this.getPx(230)
                 });
                 this.chart1 = chart
                 chart.data(this.list1);
@@ -198,30 +199,41 @@
                         return val;
                     },
                 });
+
                 chart.coordinate('theta', {
                     radius: 0.75,
                     innerRadius: 0.6,
                 });
 
+                 chart.tooltip(false)
                 //  提示
-                chart.tooltip({
-                    showTitle: false,   //  是否显示标题
-                    itemTpl: `<div class="tooltip">
-                        <img src='https://alipic.lanhuapp.com/xd5f119bbd-a2db-4d5d-a40d-2f02216ea1f5'/>
-                        <span>{item}: {percent}%</span>
-                    </div>`,
-                });
+                // chart.tooltip({
+                //     showTitle: false,   //  是否显示标题
+                //     itemTpl: `<div class="tooltip">
+                //         <img src='https://alipic.lanhuapp.com/xd5f119bbd-a2db-4d5d-a40d-2f02216ea1f5'/>
+                //         <span>{item}: {percent}%</span>
+                //     </div>`,
+                // });
 
                 //  图例
                 // chart.legend(false);
                 chart.legend({
-                    // position: 'right',
+                    position: 'left',
+                    background: {
+                        padding: [this.getPx(10),0,0,this.getPx(200)],
+                        style: {
+                            strokeOpacity: 0
+                        }
+                    },
+                    itemHeight: this.getPx(40),
                     itemName: {
                         style: {
-                            fill: 'rgba(255, 255, 255, 0.8)',
+                            fontSize: this.getPx(15),
+                            fill: 'rgba(255, 255, 255, 0.7)',
                         }
                     },
                 });
+                chart.removeInteraction('legend-filter')
 
                 chart
                     .interval({
@@ -233,8 +245,8 @@
                                         default: {
                                             style: {
                                                 lineWidth: 0,
-                                                shadowBlur: 20,
-                                                shadowOffsetY: 15,
+                                                shadowBlur: this.getPx(20),
+                                                shadowOffsetY: this.getPx(10),
                                                 shadowColor: "rgba(86, 165, 255, .4)"
                                             }
                                         }
@@ -245,23 +257,47 @@
                     })
                     .adjust('stack')
                     .position('percent')
-                    .color('item',['rgba(0, 119, 255, 1)','rgba(255, 79, 64, 1)','yellow','#000'])
-                    .tooltip('item*percent', (item, percent) => {
-                        return {
-                            item,
-                            percent: percent * 100,
-                        };
-                    })
-                    // .label('percent', (percent) => {
+                    .color('item',['#0077FF','#FF4F40','#FF8640','#57CFE3'])
+                    // .tooltip('item*percent', (item, percent) => {
                     //     return {
-                    //         content: (data) => {
-                    //             return percent * 100;
-                    //         },
+                    //         item,
+                    //         percent: percent * 100,
                     //     };
                     // })
                     // .label('percent', {
+                    //     offset: -40,
+                    //     style: {
+                    //         textAlign: 'center',
+                    //         fontSize: 12,
+                    //         shadowBlur: 2,
+                    //         shadowColor: 'rgba(0, 0, 0, .45)',
+                    //         fill: '#fff',
+                    //     },
+                    // })
+                    .label('percent', (percent) => {
+                        const obj = percent === 0 ? {
+                            offset: -40,
+                            style: {
+                                textAlign: 'center',
+                                fontSize: 0,
+                                shadowBlur: 2,
+                                shadowColor: 'rgba(0, 0, 0, .45)',
+                                fill: '#fff',
+                            }
+                        } : {
+                            offset: this.getPx(-18),
+                            style: {
+                                textAlign: 'center',
+                                fontSize: this.getPx(13),
+                                fill: 'rgba(255, 255, 255, .6)',
+                            },
+                            autoRotate: false
+                        }
+                        return obj
+                    })
+                    // .label('percent', {
                     //     layout: [{ type: 'pie-spider' }, { type: 'hide-overlap' }],
-                    //     offset: 35,
+                    //     offset: 5,
                     //     labelHeight: 38,
                     //     content: (obj, item) => {
                     //         const G = getEngine('canvas');
@@ -270,8 +306,8 @@
                     //         const [y0, y1] = item.y || [0, 0];
                     //         const inRight = y0 < y1;
                     //         const textAlign = inRight ? 'left' : 'right';
-                    //
-                    //         const topFontSize = windowWidth * 0.00729166;
+                    
+                    //         const topFontSize = windowWidth * 0.006;
                     //         const bottomFontSize = windowWidth * 0.009375;
                     //         group.addShape({
                     //             type: 'text',
@@ -284,7 +320,7 @@
                     //                 textAlign,
                     //             },
                     //         });
-                    //
+                    
                     //         group.addShape({
                     //             type: 'text',
                     //             attrs: {
@@ -298,7 +334,7 @@
                     //                 fontSize: bottomFontSize,
                     //             },
                     //         });
-                    //
+                    
                     //         if (!inRight) {
                     //             group.translate(group.getBBox().width, 0);
                     //         }
@@ -324,9 +360,9 @@
                 // Step 1: 创建 Chart 对象
                 const chart = new Chart({
                     container: 'c2', // 指定图表容器 ID
-                    height : windowWidth * 0.125, // 指定图表高度
+                    // height : windowWidth * 0.125, // 指定图表高度
+                    height: this.getPx(250),
                     autoFit: true,
-                    // padding: [0, 0, 20, 0]
                 });
                 this.chart2 = chart
                 //  载入数据源
@@ -339,21 +375,34 @@
                         min: 0,
                         max: maxNum + 5,
                     },
+                    time: {
+                        type: 'time'
+                    },
                 });
                 //  刻度线
-                chart.axis('time', {tickLine: false,label:{
-                    autoHide: true,
-                    autoEllipsis: true,
-                    autoRotate: false,
-                    style: {
-                        fill: 'rgba(255, 255, 255, 0.8)',
-                        fontSize: 10
+                chart.axis('time', {
+                    tickLine: false,
+                    label:{
+                        autoHide: true,
+                        autoEllipsis: true,
+                        autoRotate: false,
+                        style: {
+                            fill: 'rgba(255, 255, 255, 0.8)',
+                            fontSize: 10
+                        },
+                        formatter: (text, item, index) => {
+                            // console.log(this.list2[index].time.split(' ')[1])
+                            return this.list2[index].time.split(' ')[1]
+                        }
                     },
-                    // formatter: (text, item, index) => {
-                    //     // console.log(text, item, index)
-                    //     return this.getTime(text)
-                    // }
-                }})
+                    line: {
+                        style: {
+                            lineWidth: 0.5,
+                            stroke: '#BFBFBF',
+                        },
+                    },
+                    grid: 'line'
+                })
                 chart.axis('num', {
                     grid: null,
                     line: {
@@ -386,14 +435,11 @@
                 //  图例
                 // chart.legend(false);
                 chart.legend({
-                    // position: 'right',
                     itemName: {
                         style: {
-                            fill: 'rgba(255, 255, 255, 0.8)',
+                            fontSize: this.getPx(15),
+                            fill: 'rgba(255, 255, 255, 0.7)',
                         }
-                    },
-                    marker: {
-                        // symbol: "hyphen",
                     },
                 });
 
@@ -401,7 +447,7 @@
                 chart
                     .line()
                     .position('time*num')
-                    .color('type',['rgba(0, 119, 255, 1)','rgba(255, 79, 64, 1)','yellow','#000'])
+                    .color('type',['#0077FF','#FF4F40','#FF8640','#57CFE3'])
                     .shape('smooth')
                     .size(3.5)
                     .style({
@@ -420,18 +466,18 @@
                 chart
                     .point()
                     .position('time*num')
-                    .color('type',['rgba(0, 119, 255, 1)','rgba(255, 79, 64, 1)','yellow','#000'])
+                    .color('type',['#0077FF','#FF4F40','#FF8640','#57CFE3'])
                     .shape('circle')
-                    .style({
-                        fields: [ 'time', 'num' ], // 数据字段
-                        callback: (xVal, yVal) => {
-                            if (xVal === self.list2[0].time || xVal === self.list2[self.list2.length - 1].time) {
-                                return {r: 0}
-                            }
-                            return {strokeOpacity: 0}
-                        }
-                    })
-                    .size(3)
+                    // .style({
+                    //     fields: [ 'time', 'num' ], // 数据字段
+                    //     callback: (xVal, yVal) => {
+                    //         if (xVal === self.list2[0].time || xVal === self.list2[self.list2.length - 1].time) {
+                    //             return {r: 0}
+                    //         }
+                    //         return {strokeOpacity: 0}
+                    //     }
+                    // })
+                    .size(0)
                     .tooltip('num', (num, value) => {
                         return {
                             num
@@ -469,6 +515,7 @@
             },
             //  截取时间
             getTime(time){
+                return time
                 try{
                     return time.split(' ')[0].split('-')[2] + '日' + time.split(' ')[1].split(':')[0] + '时'
                     // return time.split(':')[0] + ':' +time.split(':')[1]
@@ -479,6 +526,7 @@
             },
             //  重组图标数据
             setChartData(data) {
+                console.log(data)
                 let [allNum,all_in,all_out] = [0,0,0]
                 if (this.YJLX === '车速变换') {
                     allNum = data.average_speed.reduce((p,c) => p + c)
@@ -496,6 +544,8 @@
                 if (allNum === 0 || (this.YJLX === '电压变化' && data.voltage[0].length === 0)) {
                     this.chart1 && this.chart1.destroy()
                     this.chart2 && this.chart2.destroy()
+                    this.chart1 = null
+                    this.chart2 = null
                     this.$message.warning('暂无数据');
                 } else {
                     const [list1, list2] = [[],[]]
@@ -511,9 +561,9 @@
                         })
                         data.speed.map((x,xIndex) => {
                             data.x_time.map((e, index) => {
-                                if (data.x_time.length > 12 && index % Math.floor(data.x_time.length / 11) !== 0) return
+                                if (data.x_time.length > 6 && index % Math.floor(data.x_time.length / 5) !== 0) return
                                 list2.push({
-                                    time: this.getTime(e),
+                                    time: e,
                                     type: `${xIndex}号单元`,
                                     num: data.speed[xIndex][index],
                                 })
@@ -522,9 +572,9 @@
                     } else if (this.YJLX === '电压变化') {
                         data.voltage.map((x,xIndex) => {
                             data.x_time.map((e, index) => {
-                                if (data.x_time.length > 12 && index % Math.floor(data.x_time.length / 11) !== 0) return
+                                if (data.x_time.length > 6 && index % Math.floor(data.x_time.length / 5) !== 0) return
                                 list2.push({
-                                    time: this.getTime(e),
+                                    time: e,
                                     type: `${xIndex}号单元`,
                                     num: data.voltage[xIndex][index],
                                 })
@@ -538,14 +588,14 @@
                                 item: `${index}号单元`,
                                 count: count,
                                 percent
-                                // percent: percent === '0.00' ? 0.01 : percent === '1.00' ? 0.99 : percent
+                                // percent: 0.25
                             })
                         })
                         data.in.map((x,xIndex) => {
                             data.x_time.map((e, index) => {
-                                if (data.x_time.length > 12 && index % Math.floor(data.x_time.length / 11) !== 0) return
+                                if (data.x_time.length > 6 && index % Math.floor(data.x_time.length / 5) !== 0) return
                                 list2.push({
-                                    time: this.getTime(e),
+                                    time: e,
                                     type: `${xIndex}号单元`,
                                     num: data.in[xIndex][index] + data.out[xIndex][index],
                                 })
@@ -564,6 +614,9 @@
                     }, 500)
                 }
                 console.log(this.list1)
+            },
+            getPx(num) {
+                return document.documentElement.clientWidth * (num / 1920)
             }
         },
         watch: {
@@ -606,7 +659,7 @@
         padding: 16px 36px;
         &>div{
             display: flex;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
             .chartItemBox{
                 flex: 1;
                 margin-right: 32px;
@@ -619,7 +672,7 @@
                 div{
                     display: flex;
                     min-width: 100px;
-                    height: 40px;
+                    height: 35px;
                     /*background: #102D32;*/
                     opacity: 1;
                     border-radius: 5px;
@@ -628,7 +681,7 @@
                     align-items: center;
                     span{
                         flex: 1;
-                        font-size: 20px;
+                        font-size: 18px;
                         color: rgba(255,255,255,.8);
                     }
                     img{
@@ -645,16 +698,16 @@
                 height: 2px;
                 border-radius: 4px;
                 left: 33%;
-                top: 152px;
+                top: 142px;
                 background: rgba(255,255,255,.8);;
             }
             button{
                 width: 100%;
-                height: 40px;
+                height: 35px;
                 background: $Button-Color;
                 border: none;
                 border-radius: 5px;
-                font-size: 18px;
+                font-size: 16px;
                 font-weight: bold;
                 box-shadow: 0px 6px 12px $Button-Shadow-Color;
                 cursor: pointer;

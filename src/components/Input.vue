@@ -44,11 +44,11 @@
         background: $Default-Bg;
         text-indent: 17px;
         color: $Title-Color;
-        font-size: $Placeholder-Font-Size;
+        font-size: 16px;
         outline:none;
     }
     input::-webkit-input-placeholder{
         color: $Placeholder-Color;
-        font-size: $Placeholder-Font-Size;
+        font-size: 16px;
     }
 </style>

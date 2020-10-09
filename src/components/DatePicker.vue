@@ -65,7 +65,7 @@
     .textBox{
         display: flex;
         min-width: 100px;
-        height: 40px;
+        height: 35px;
         background: $Default-Bg;
         opacity: 1;
         border-radius: 5px;
@@ -76,11 +76,11 @@
         cursor: pointer;
         span{
             flex: 1;
-            font-size: 20px;
+            font-size: 16px;
             color: $Title-Color;
         }
         .calendar{
-            width: 18px;
+            width: 16px;
         }
     }
     .calendarBox{

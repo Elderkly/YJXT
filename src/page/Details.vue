@@ -216,7 +216,7 @@
                         let msg = text.split(',');
                         let data = '时间：' + msg[3] + '  单元号：' + dir_d[msg[1]] + '  检测状态：' + sta_d[msg[2]] + '\n';
                         console.log('修改车辆信号灯',data);
-                        this.changeLog('running', data)
+                        this.changeLog('testing', data)
                         //  查询需要更新来车信号的item
                         const index = this.Details.element.findIndex(e => e.name === dir_d[msg[1]])
                         if (index !== -1) {

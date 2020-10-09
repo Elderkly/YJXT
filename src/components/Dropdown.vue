@@ -60,11 +60,11 @@
         overflow: hidden;
         span{
             flex: 1;
-            font-size: $Placeholder-Font-Size;
+            font-size: 16px;
             color: $Title-Color;
         }
         .defaultColor{
-            color: $Placeholder-Color;
+            color: 16px;
         }
         img{
             width: 8px;
