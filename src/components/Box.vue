@@ -19,6 +19,7 @@
 </template>
 
 <script>
+    //  窗口模块
     export default {
         name: 'Box',
         props: {

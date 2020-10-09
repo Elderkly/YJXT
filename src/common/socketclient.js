@@ -1,3 +1,4 @@
+//  客户提供的长连接模块
 export default function SocketClient(ip,port,query) {
     var _this = this;
     this.socket = '';

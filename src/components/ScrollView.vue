@@ -12,6 +12,7 @@
 </template>
 
 <script>
+    //  滚动模块
     export default {
         name: 'ScrollView',
         props: ['boxClass','type','barClass'],

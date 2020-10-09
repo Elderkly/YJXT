@@ -5,6 +5,7 @@
 </template>
 
 <script>
+    //  详情页的道路模块
     export default {
         name: 'CrossingItem',
         props: {

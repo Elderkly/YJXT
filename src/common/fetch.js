@@ -1,3 +1,4 @@
+//  公用请求函数
 import {Host} from './config'
 export default {
     Get(path) {

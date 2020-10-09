@@ -5,7 +5,7 @@
                 <div class="top-box">
                     <div class="TB-left">
                         <div class="items">
-                            <p>预警参数配置</p>
+                            <p>显示规则</p>
                             <Input v-model="submitConfig.config"/>
                         </div>
                         <div class="items">
@@ -124,13 +124,18 @@
                     routeid: null,
                     ruleList: ['主路来车，停车让行','左侧来车，减速慢行','右侧来车，减速慢行','两侧来车减速慢行','减速慢行，主路优先','主路来车，注意避让','减速慢行','备用','夜间模式','白天模式','停止显示','显示逻辑1','显示逻辑2','显示逻辑3']
                 },
-                center: [114.06055,22.540582],
+                //  打开小地图默认坐标
+                center: [114.06055,22.540582],  
+                //  选取的地图信息
                 address: {
                     center: [],
                     name: '',
                 },
+                //  是否打开小地图
                 openMap: false,
+                //  地图事件
                 events: {
+                    //  初始化完成
                     complete() {
                         if (!!self.address.name) return
                         self.address = {
@@ -138,6 +143,7 @@
                             name: '市民广场',
                         }
                     },
+                    //  点击事件
                     click(e) {
                         let { lng, lat } = e.lnglat;
                         self.lng = lng;
@@ -156,6 +162,7 @@
             }
         },
         mounted() {
+            //  获取连接到服务器的设备
             this.$fetch.Get('/connect4.php')
                 .then(res => {
                     if (res.code === 200) {
@@ -171,6 +178,7 @@
             }
         },
         methods: {
+            //  获取详细地址
             getAddress(lng ,lat) {
                 return new Promise(resolve => {
                     // 这里通过高德 SDK 完成。
@@ -194,11 +202,13 @@
             getCoord() {
                 this.openMap = true
             },
+            //  地图关闭 写入参数
             hiddenMap() {
                 this.openMap = false
                 this.submitConfig.coord = this.address.center
                 this.submitConfig.loc = this.address.name
             },
+            //  点击地图搜索内容 查询详细地址
             onSearchResult(pois) {
                 if (pois.length > 0) {
                     const poi = pois[0]
@@ -212,12 +222,14 @@
                         })
                 }
             },
+            //  地图打开时 点击其他区域关闭地图
             setUpVisible(e) {
                 const _con = this.$refs.fixedBox;   // 设置目标区域
                 if (_con === e.target) {
                     this.openMap = false
                 }
             },
+            //  点击左上区域 保存参数设置
             submit() {
                 const {config, coord, number, element, shape, loc} = this.submitConfig
                 const num = !config ? '请输入预警参数配置' :
@@ -255,6 +267,7 @@
                     this.$message.warning(num);
                 }
             },
+            //  查询连接到服务器的设备 的配置信息
             selectMoreElement(item) {
                 this.$fetch.Post('/connect6.php',{
                     code: item[1],
@@ -278,6 +291,7 @@
                         }
                     })
             },
+            //  底部 向单元发送规则
             send(item) {
                 // console.log(item,this.displayRuleSettings)
                 if (this.displayRuleSettings.target) {

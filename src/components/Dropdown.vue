@@ -14,6 +14,7 @@
 </template>
 
 <script>
+    //  公用下拉选择器
     export default {
         name: 'Dropdown',
         props: {

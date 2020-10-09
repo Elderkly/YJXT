@@ -57,6 +57,7 @@
                 <div id="c2"></div>
             </div>
         </Box>
+        <!-- 详情模块 -->
         <Details v-model="crossingDetails" v-if="crossingDetails.code" @close="crossingDetails = {}"/>
     </div>
 </template>
@@ -72,19 +73,19 @@
     export default {
         data() {
             return {
-                zoom: 16,
-                center: [114.06055,22.540582],
-                markers: [],
-                windows: [],
-                window: '',
-                LK: null,
-                YJLX: null,
-                FBL: null,
-                SD: null,
-                ED: null,
-                crossing: this.$store.getters.crossing,
-                list1: [],
-                list2: [],
+                zoom: 15,                           //  地图放大比例
+                center: [114.06055,22.540582],      //  地图默认坐标
+                markers: [],                        //  地图标点
+                windows: [],                        //  地图信息弹窗
+                window: '',                         //  显示的地图弹窗
+                LK: null,                           //  路口
+                YJLX: null,                         //  预警类型
+                FBL: null,                          //  分辨率
+                SD: null,                           //  开始时间
+                ED: null,                           //  结束时间
+                crossing: this.$store.getters.crossing,//   全局路口数据
+                list1: [],                          //  图表1
+                list2: [],                          //  图表2
                 crossingDetails: {},     //  当前显示详情的路口信息
             }
         },
@@ -117,6 +118,7 @@
                     this.center = center
                 },100)
             },
+            //  初始化地图
             initMap() {
                 /**
                  * 0: "哚基交叉口"
@@ -170,6 +172,7 @@
                 this.windows = windows;
                 this.center = markers[0] ? markers[0].position : this.center
             },
+            //  初始化数据分析图模块 绘制图像
             initCrossing() {
                 if (this.crossing.length > 0) {
                     this.$nextTick(() => {
@@ -205,13 +208,16 @@
                     innerRadius: 0.6,
                 });
 
+                //  鼠标移入的提示
                  chart.tooltip(false)
                 //  提示
                 // chart.tooltip({
                 //     showTitle: false,   //  是否显示标题
-                //     itemTpl: `<div class="tooltip">
+                //     itemTpl: `<div class="tooltip chart2Tooltip">
                 //         <img src='https://alipic.lanhuapp.com/xd5f119bbd-a2db-4d5d-a40d-2f02216ea1f5'/>
-                //         <span>{item}: {percent}%</span>
+                //         <span>{item}</span>
+                //         <p>占比：{percent}%</p>
+                //         <p>数值：{num}</p>
                 //     </div>`,
                 // });
 
@@ -228,11 +234,13 @@
                     itemHeight: this.getPx(40),
                     itemName: {
                         style: {
-                            fontSize: this.getPx(15),
+                            fontSize: this.getPx(16),
+                            fontWeight: 'bold',
                             fill: 'rgba(255, 255, 255, 0.7)',
                         }
                     },
                 });
+                //  移除图例默认点击事件
                 chart.removeInteraction('legend-filter')
 
                 chart
@@ -258,22 +266,16 @@
                     .adjust('stack')
                     .position('percent')
                     .color('item',['#0077FF','#FF4F40','#FF8640','#57CFE3'])
-                    // .tooltip('item*percent', (item, percent) => {
+                    //  向鼠标移入的提示窗口传递数据
+                    // .tooltip('item*percent*num', (item, percent, num) => {
+                    //     console.log(item, percent, num)
                     //     return {
                     //         item,
+                    //         num,
                     //         percent: percent * 100,
                     //     };
                     // })
-                    // .label('percent', {
-                    //     offset: -40,
-                    //     style: {
-                    //         textAlign: 'center',
-                    //         fontSize: 12,
-                    //         shadowBlur: 2,
-                    //         shadowColor: 'rgba(0, 0, 0, .45)',
-                    //         fill: '#fff',
-                    //     },
-                    // })
+                    //  图表显示百分比
                     .label('percent', (percent) => {
                         const obj = percent === 0 ? {
                             offset: -40,
@@ -288,13 +290,15 @@
                             offset: this.getPx(-18),
                             style: {
                                 textAlign: 'center',
-                                fontSize: this.getPx(13),
+                                fontSize: this.getPx(14),
+                                fontWeight: 'bold',
                                 fill: 'rgba(255, 255, 255, .6)',
                             },
                             autoRotate: false
                         }
                         return obj
                     })
+                    //  第一版的自定义图例
                     // .label('percent', {
                     //     layout: [{ type: 'pie-spider' }, { type: 'hide-overlap' }],
                     //     offset: 5,
@@ -392,7 +396,8 @@
                         autoRotate: false,
                         style: {
                             fill: 'rgba(255, 255, 255, 0.8)',
-                            fontSize: 10
+                            fontSize: this.getPx(14),
+                            fontWeight: 'bold',
                         },
                         formatter: (text, item, index) => {
                             // console.log(this.list2[index].time.split(' ')[1])
@@ -407,6 +412,7 @@
                     },
                     grid: 'line'
                 })
+                //  坐标系
                 chart.axis('num', {
                     grid: null,
                     line: {
@@ -439,6 +445,9 @@
                 //  图例
                 // chart.legend(false);
                 chart.legend({
+                    marker: {
+                        symbol: "hyphen",
+                    },
                     itemName: {
                         style: {
                             fontSize: this.getPx(15),
@@ -491,6 +500,7 @@
                 //  渲染图表
                 chart.render();
             },
+            //  点击提交按钮
             submit() {
                 const num = !moment(this.SD).isSame(this.ED) && !moment(this.SD).isBefore(this.ED) ? '结束时间不能小于开始时间' :
                     !this.LK ? '请选择路口' :
@@ -606,8 +616,48 @@
                             })
                         })
                     }
+
                     this.list1 = list1
                     this.list2 = list2
+
+                    //  假数据  
+                    // const baseList1 = [
+                    //     {count: 5, item: "0号单元",percent: 0.17},
+                    //     {count: 15, item: "1号单元",percent: 0.5},
+                    //     {count: 7, item: "2号单元",percent: 0.23},
+                    //     {count: 3, item: "3号单元",percent: 0.1},
+                    // ]
+                    // const baseList2 = [
+                    //     {"time":"2020-10-09 00:00:00","type":"0号单元","num":33},
+                    //     {"time":"2020-10-09 03:30:00","type":"0号单元","num":12},
+                    //     {"time":"2020-10-09 07:00:00","type":"0号单元","num":88},
+                    //     {"time":"2020-10-09 10:30:00","type":"0号单元","num":555},
+                    //     {"time":"2020-10-09 14:00:00","type":"0号单元","num":0},
+                    //     {"time":"2020-10-09 17:30:00","type":"0号单元","num":22},
+                    //     {"time":"2020-10-09 21:00:00","type":"0号单元","num":34},
+                    //     {"time":"2020-10-09 00:00:00","type":"1号单元","num":19},
+                    //     {"time":"2020-10-09 03:30:00","type":"1号单元","num":12},
+                    //     {"time":"2020-10-09 07:00:00","type":"1号单元","num":56},
+                    //     {"time":"2020-10-09 10:30:00","type":"1号单元","num":22},
+                    //     {"time":"2020-10-09 14:00:00","type":"1号单元","num":11},
+                    //     {"time":"2020-10-09 17:30:00","type":"1号单元","num":2},
+                    //     {"time":"2020-10-09 21:00:00","type":"1号单元","num":5},
+                    //     {"time":"2020-10-09 00:00:00","type":"2号单元","num":99},
+                    //     {"time":"2020-10-09 03:30:00","type":"2号单元","num":542},
+                    //     {"time":"2020-10-09 07:00:00","type":"2号单元","num":351},
+                    //     {"time":"2020-10-09 10:30:00","type":"2号单元","num":251},
+                    //     {"time":"2020-10-09 14:00:00","type":"2号单元","num":581},
+                    //     {"time":"2020-10-09 17:30:00","type":"2号单元","num":94},
+                    //     {"time":"2020-10-09 21:00:00","type":"2号单元","num":421},
+                    //     {"time":"2020-10-09 00:00:00","type":"3号单元","num":351},
+                    //     {"time":"2020-10-09 03:30:00","type":"3号单元","num":241},
+                    //     {"time":"2020-10-09 07:00:00","type":"3号单元","num":51},
+                    //     {"time":"2020-10-09 10:30:00","type":"3号单元","num":22},
+                    //     {"time":"2020-10-09 14:00:00","type":"3号单元","num":431},
+                    //     {"time":"2020-10-09 17:30:00","type":"3号单元","num":123},
+                    //     {"time":"2020-10-09 21:00:00","type":"3号单元","num":213}]
+                    // this.list1 = baseList1
+                    // this.list2 = baseList2
 
                     this.chart1 && this.chart1.destroy()
                     this.chart2 && this.chart2.destroy()
@@ -615,9 +665,9 @@
                         this.createChart1()
                         this.YJLX === '电压变化' && this.chart1 && this.chart1.hide()
                         this.createChart2()
-                    }, 500)
+                    }, 300)
                 }
-                console.log(this.list2.length,data.x_time.length,this.list2)
+                // console.log(this.list1,JSON.stringify(this.list2))
             },
             getPx(num) {
                 return document.documentElement.clientWidth * (num / 1920)
@@ -771,7 +821,7 @@
         }
     }
     #c2{
-        margin-top: 5%;
+        // margin-top: 1%;
     }
     .HomeDropDownBox{
         width: 200px;
