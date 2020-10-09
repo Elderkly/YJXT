@@ -66,7 +66,7 @@
                             <span class="ellipsis">{{index + 1}}</span>
                             <span class="ellipsis">{{item[0]}}</span>
                             <span class="ellipsis">{{item[1]}}</span>
-                            <span @click="selectMoreElement(item[1])">查看</span>
+                            <span @click="selectMoreElement(item)">查看</span>
                         </div>
                     </ScrollView>
                 </div>
@@ -245,20 +245,37 @@
                                 loc: null,          //  详细地址
                             }
                         }
-                        this.$store.commit('ADD_CROSSING', [loc,number,coord[0],coord[1]])
+                        const index = this.$store.getters.crossing.findIndex(e => e[1] === number)
+                        if (index === -1) {
+                            this.$store.commit('ADD_CROSSING', [loc,number,coord[0],coord[1]])
+                        }
                         this.$message.success(res.data);
                     })
                 } else {
                     this.$message.warning(num);
                 }
             },
-            selectMoreElement(code) {
+            selectMoreElement(item) {
                 this.$fetch.Post('/connect6.php',{
-                    code: code,
+                    code: item[1],
                 })
                     .then(res => {
-                        this.displayRuleSettings.routeid = code
+                        this.displayRuleSettings.routeid = item[1]
                         this.voltage_log = res.data.uint_log
+                        //  将数据写入左侧
+                        const index = this.$store.getters.crossing.findIndex(e => e[1] === item[1])
+                        if (index !== -1) {
+                            console.log(res,item,this.$store.getters.crossing[index])
+                            const vuexItem = this.$store.getters.crossing[index]
+                             this.submitConfig = {
+                                config: item[2],       //  参数配置
+                                coord: [vuexItem[2],vuexItem[3]],        //  坐标
+                                number: item[1],       //  编号
+                                element: res.data.uint_log.length,      //  单元个数
+                                shape: res.data.roadtype,        //  路口形状
+                                loc: vuexItem[0],          //  详细地址
+                            }
+                        }
                     })
             },
             send(item) {

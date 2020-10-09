@@ -376,7 +376,11 @@
                         max: maxNum + 5,
                     },
                     time: {
-                        type: 'time'
+                        // min: this.list2[0].time,
+                        type: 'time',
+                        showLast: true,
+                        // maxLimit: this.list2[this.list2.length - 1].time
+                        // max: '12:00:00',
                     },
                 });
                 //  刻度线
@@ -526,7 +530,7 @@
             },
             //  重组图标数据
             setChartData(data) {
-                console.log(data)
+                // console.log(data)
                 let [allNum,all_in,all_out] = [0,0,0]
                 if (this.YJLX === '车速变换') {
                     allNum = data.average_speed.reduce((p,c) => p + c)
@@ -593,7 +597,7 @@
                         })
                         data.in.map((x,xIndex) => {
                             data.x_time.map((e, index) => {
-                                if (data.x_time.length > 6 && index % Math.floor(data.x_time.length / 5) !== 0) return
+                                if (data.x_time.length > 6 && index % Math.floor(data.x_time.length / 6) !== 0) return
                                 list2.push({
                                     time: e,
                                     type: `${xIndex}号单元`,
@@ -613,7 +617,7 @@
                         this.createChart2()
                     }, 500)
                 }
-                console.log(this.list1)
+                console.log(this.list2.length,data.x_time.length,this.list2)
             },
             getPx(num) {
                 return document.documentElement.clientWidth * (num / 1920)
